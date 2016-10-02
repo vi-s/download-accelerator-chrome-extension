@@ -13,7 +13,8 @@ import Queue
 import subprocess
 import json
 import pipes
-import os 
+import os
+import time
 
 try:
   import Tkinter
@@ -79,11 +80,16 @@ if Tkinter:
       self.sendButton = Tkinter.Button(self, text="Send", command=self.onSend)
       self.sendButton.grid(row=1, column=1, padx=10, pady=10)
 
-      threading.Timer(.1, self.processMessages).start()
+      send_message('"INSIDE WINDOW INIT"')
+
+      threading.Timer(1, self.processMessages).start()
 
 
     def processMessages(self):
+      send_message('"PROCESS MSG"')
+
       while not self.queue.empty():
+        send_message('"Q NOT EMPTY"')
         message = self.queue.get_nowait()
 
         if message == None:
@@ -94,13 +100,16 @@ if Tkinter:
         # self.onSend(message);
         message = json.loads(message)
 
+        send_message('"FILE NAME"')
+        send_message('"{0}"'.format(message['body']['fileName']));
+        send_message('"AFTER FILE"')
+
         outopt = '{0}/{1}'.format('~/octjdl', message['body']['fileName'])
         outopt = os.path.expanduser(outopt)
 
-        self.log("Interpreted fileName %s" % message['body']['fileName'])
+        # dir_path = os.path.dirname(os.path.realpath(__file__))
+        # self.log(dir_path)
 
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        self.log(dir_path)
         self.onSend('HOST URL RECVd')
         self.onSend(message['body']['url'])
         self.onSend(outopt)
@@ -112,7 +121,8 @@ if Tkinter:
 
         # quotedUrl = pipes.quote(message['body']['url'])
 
-        self.forkAxel(outopt, message['body']['url'])
+        thread = threading.Thread(target=self.forkAxel, args=(outopt, message['body']['url']))
+        thread.start()
 
         # proc = subprocess.Popen(
         #     '/usr/local/bin/axel -o {0} -n4 {1}'.format(outopt, quotedUrl),
@@ -127,7 +137,7 @@ if Tkinter:
         # self.onSend('AFTER PROC OUTPUT')
         # self.log("Received %s" % message)
 
-      threading.Timer(.1, self.processMessages).start()
+      threading.Timer(1, self.processMessages).start()
 
     def onSend(self, msg):
       text = '{"text": "' + msg + '"}'
@@ -139,22 +149,27 @@ if Tkinter:
         sys.exit(1)
 
     def log(self, message):
-      self.text.config(state=Tkinter.NORMAL)
-      self.text.insert(Tkinter.END, message + "\n")
-      self.text.config(state=Tkinter.DISABLED)
+      return
+
+    # def log(self, message):
+    #   self.text.config(state=Tkinter.NORMAL)
+    #   self.text.insert(Tkinter.END, message + "\n")
+    #   self.text.config(state=Tkinter.DISABLED)
 
     def forkAxel(self, outpath, url):
+      send_message('"AXEL FORKED {0} {1}"'.format(outpath, url))
+
       proc = subprocess.Popen(
           ['./axel_util', outpath, url],
           stdout=subprocess.PIPE,
           stderr=subprocess.PIPE,
           shell=False
       )
-      # (out, err) = proc.communicate() # Communicate blocks
-      # self.onSend('AFTER PROC EXEC')
-      # self.onSend(out)
-      # self.log(err)
-      # self.onSend('AFTER PROC OUTPUT')
+      (out, err) = proc.communicate() # Communicate blocks
+      self.onSend('AFTER PROC EXEC')
+      self.onSend(out)
+      self.log(err)
+      self.onSend('AFTER PROC OUTPUT')
 
 
 
@@ -166,18 +181,21 @@ def Main():
     sys.exit(0)
 
   queue = Queue.Queue()
-
+  send_message('"INSIDE MAIN FN"')
   main_window = NativeMessagingWindow(queue)
   main_window.master.title('Native Messaging Example')
 
   thread = threading.Thread(target=read_thread_func, args=(queue,))
-  thread.daemon = True
+  # thread.daemon = True
   thread.start()
 
+  # threading.Timer(1, main_window.processMessages).start()
+
   # while True:
+  #   time.sleep(5)
   #   pass
 
-  main_window.mainloop()
+  # main_window.mainloop()
 
   # sys.exit(0)
 
