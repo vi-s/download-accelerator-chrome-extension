@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+
+import threading
+import subprocess
+import pipes
+
+outopt = '{0}/{1}'.format('~/octjdl', 'zzFTxx99.part4.rar')
+url = "http://prx-166.keep2share.cc/ce554092fd0ac/c44a02e1da9cb/2de742cfc829a?temp_url_sig=a12572515a7b90fec4410f6566f108dc413013d24bc9d5d3912dfea27530f62f4b64048b52fd90c6e8053e89dd8ef1116ba6cf0587eb31d19374094dea97de28&temp_url_expires=1475574093&id=40a6c42acbb89&node_id=166&project=moneyplatform&user_id=19102&name=zzFTxx99.part4.rar"
+url = pipes.quote(url)
+
+proc = subprocess.Popen(
+    ['./axel_util', outopt, url],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE,
+    shell=False
+)
+(out, err) = proc.communicate() # Communicate blocks
+print 'OUT', out
+print 'ERR', err
+
+# print 'axel -o {0} -n4 \\"{1}\\"'.format(outopt, url)
+
+# proc = subprocess.Popen(
+#     'axel -o {0} -n4 \\"{1}'.format(outopt, url),
+#     stdout=subprocess.PIPE,
+#     shell=True
+# )
+# (out, err) = proc.communicate() # Communicate blocks
+# print out

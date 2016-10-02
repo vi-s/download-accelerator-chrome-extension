@@ -38,10 +38,14 @@ var port = null,
     message;
 
 function appendMessage(text) {
-  console.log('HOST RESPONSE:', text);
+  console.log(text);
 }
 
 function sendNativeMessage(msg) {
+  if (!port) {
+    return;
+  }
+
   message = {'body': msg};
   port.postMessage(message);
   appendMessage("Sent message: <b>" + JSON.stringify(message) + "</b>");

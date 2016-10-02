@@ -10,6 +10,10 @@ import struct
 import sys
 import threading
 import Queue
+import subprocess
+import json
+import pipes
+import os 
 
 try:
   import Tkinter
@@ -80,21 +84,68 @@ if Tkinter:
     def processMessages(self):
       while not self.queue.empty():
         message = self.queue.get_nowait()
+
         if message == None:
           self.quit()
           return
+
         self.log("Received %s" % message)
+        # self.onSend(message);
+        message = json.loads(message)
+
+        outopt = '{0}/{1}'.format('~/octjdl', message['body']['fileName'])
+        outopt = os.path.expanduser(outopt)
+
+        self.log("Interpreted fileName %s" % message['body']['fileName'])
+
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        self.log(dir_path)
+        self.onSend('HOST URL RECVd')
+        self.onSend(message['body']['url'])
+        self.onSend(outopt)
+        self.onSend('BEFORE DBG')
+        # dbg=', '.join(['axel', '-o', outopt, '-n' + 4, message['body']['url']]), 
+        dbg = 'axel -o {0} -n4 {1}'.format(outopt, message['body']['url'])
+        self.onSend(dbg)
+        self.onSend('AFTER DBG')
+
+        quotedUrl = pipes.quote(message['body']['url'])
+
+        proc = subprocess.Popen(
+            ['./axel_util', outopt, message['body']['url']],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=False
+        )
+        (out, err) = proc.communicate() # Communicate blocks
+        self.onSend('AFTER PROC EXEC')
+        self.onSend(out)
+        self.log(err)
+        self.onSend('AFTER PROC OUTPUT')
+
+
+        # proc = subprocess.Popen(
+        #     '/usr/local/bin/axel -o {0} -n4 {1}'.format(outopt, quotedUrl),
+        #     stdout=subprocess.PIPE,
+        #     stderr=subprocess.PIPE,
+        #     shell=True
+        # )
+        # (out, err) = proc.communicate() # Communicate blocks
+        # self.onSend('AFTER PROC EXEC')
+        # self.onSend(out)
+        # self.log(err)
+        # self.onSend('AFTER PROC OUTPUT')
+        # self.log("Received %s" % message)
 
       self.after(100, self.processMessages)
 
-    def onSend(self):
-      text = '{"text": "' + self.messageContent.get() + '"}'
+    def onSend(self, msg):
+      text = '{"text": "' + msg + '"}'
       self.log('Sending %s' % text)
       try:
         send_message(text)
       except IOError:
-        tkMessageBox.showinfo('Native Messaging Example',
-                              'Failed to send message.')
+        print 'failed to send message.'
         sys.exit(1)
 
     def log(self, message):
