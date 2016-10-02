@@ -1,17 +1,21 @@
 {
   // Extension ID: knldjmfmopnpolahpmmgbagdohdnhkik ,
   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDcBHwzDvyBQ6bDppkIs9MP4ksKqCMyXQ/A52JivHZKh4YO/9vJsT3oaYhSpDCE9RPocOEQvwsHsFReW2nUEc6OLLyoCFFxIb7KkLGsmfakkut/fFdNJYh0xOTbSN8YvLWcqph09XAY2Y/f0AL7vfO1cuCqtkMt8hFrBGWxDdf9CQIDAQAB",
-  "name": "Native Messaging Example",
+  "name": "Download Accelerator",
   "version": "1.0",
   "manifest_version": 2,
-  "description": "Send a message to a native application.",
+  "description": "Run parallel accelerated downloads.",
   /*"app": {
     "launch": {
       "local_path": "main.html"
     }
   },*/
   "icons": {
-    "128": "icon-128.png"
+    "128": "icon-try.png"
+  },
+  "browser_action": {
+      "default_title": "Monitor accelerated downloads.",
+      "default_popup": "browseraction/popup.html"
   },
   "background": {
     "scripts": ["background.js"],

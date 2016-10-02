@@ -1,13 +1,11 @@
 chrome.webRequest.onBeforeRequest.addListener(function(details){
   //console.log(JSON.stringify(details));
-  let fileName;
-  if (details.url.indexOf('keep') > -1 && details.url.indexOf('name=')) {
+  if (details.url.indexOf('keep') > -1 && details.url.indexOf('name=') > -1) {
     let split = details.url.split('name=');
-    if (split.length > 1) {
-      fileName = split[1]
-    } else {
+    if (!(split.length > 1)) {
       return {};
     }
+    let fileName = split[1];
     sendNativeMessage({
       fileName: fileName,
       url: details.url
@@ -20,7 +18,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
 
   // silently cancel the request
   let blockingResponse = {
-    redirectUrl:'javascript:'
+    redirectUrl: 'javascript:'
   };
 
   return blockingResponse;
@@ -67,7 +65,6 @@ function connect() {
 }
 
 connect();
-
 
 
 
