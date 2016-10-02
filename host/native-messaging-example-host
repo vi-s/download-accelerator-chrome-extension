@@ -110,20 +110,9 @@ if Tkinter:
         self.onSend(dbg)
         self.onSend('AFTER DBG')
 
-        quotedUrl = pipes.quote(message['body']['url'])
+        # quotedUrl = pipes.quote(message['body']['url'])
 
-        proc = subprocess.Popen(
-            ['./axel_util', outopt, message['body']['url']],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            shell=False
-        )
-        (out, err) = proc.communicate() # Communicate blocks
-        self.onSend('AFTER PROC EXEC')
-        self.onSend(out)
-        self.log(err)
-        self.onSend('AFTER PROC OUTPUT')
-
+        self.forkAxel(outopt, message['body']['url'])
 
         # proc = subprocess.Popen(
         #     '/usr/local/bin/axel -o {0} -n4 {1}'.format(outopt, quotedUrl),
@@ -153,6 +142,20 @@ if Tkinter:
       self.text.config(state=Tkinter.NORMAL)
       self.text.insert(Tkinter.END, message + "\n")
       self.text.config(state=Tkinter.DISABLED)
+
+    def forkAxel(self, outpath, url):
+      proc = subprocess.Popen(
+          ['./axel_util', outpath, url],
+          stdout=subprocess.PIPE,
+          stderr=subprocess.PIPE,
+          shell=False
+      )
+      # (out, err) = proc.communicate() # Communicate blocks
+      # self.onSend('AFTER PROC EXEC')
+      # self.onSend(out)
+      # self.log(err)
+      # self.onSend('AFTER PROC OUTPUT')
+
 
 
 def Main():
