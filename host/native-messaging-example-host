@@ -79,7 +79,8 @@ if Tkinter:
       self.sendButton = Tkinter.Button(self, text="Send", command=self.onSend)
       self.sendButton.grid(row=1, column=1, padx=10, pady=10)
 
-      self.after(100, self.processMessages)
+      threading.Timer(.1, self.processMessages).start()
+
 
     def processMessages(self):
       while not self.queue.empty():
@@ -137,7 +138,7 @@ if Tkinter:
         # self.onSend('AFTER PROC OUTPUT')
         # self.log("Received %s" % message)
 
-      self.after(100, self.processMessages)
+      threading.Timer(.1, self.processMessages).start()
 
     def onSend(self, msg):
       text = '{"text": "' + msg + '"}'
@@ -170,9 +171,12 @@ def Main():
   thread.daemon = True
   thread.start()
 
+  # while True:
+  #   pass
+
   main_window.mainloop()
 
-  sys.exit(0)
+  # sys.exit(0)
 
 
 if __name__ == '__main__':
