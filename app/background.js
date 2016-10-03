@@ -1,5 +1,23 @@
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+  // console.log(bg msg rcv);
+  switch(request.type) {
+    case "frompopup":
+      chrome.extension.sendMessage({
+        type: 'frombg'
+      });
+      console.log(request);
+      break;
+    // case "color-divs":
+    //   colorDivs();
+    //    break;
+    default:
+      break;
+  }
+  return true;
+});
+
 chrome.webRequest.onBeforeRequest.addListener(function(details){
-  //console.log(JSON.stringify(details));
+  //console.log(JSON.ssringify(details));
   if (details.url.indexOf('keep') > -1 && details.url.indexOf('name=') > -1) {
     let split = details.url.split('name=');
     if (!(split.length > 1)) {
@@ -7,12 +25,12 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
     }
     let fileName = split[1];
     let id = uuid();
-    sendNativeMessage({
+    let downloadMsg = {
       id: id,
       fileName: fileName,
       url: details.url
-    });
-    dt.addDownload(id, fileName, details.url);
+    };
+    sendNativeMessage(downloadMsg);
     console.log('uuid', id);
     console.log('k2cc file found:', fileName);
     console.log('@URL:', details.url);
@@ -38,7 +56,8 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
 // opt_extraInfoSpec array
 ['requestBody','blocking']);
 
-var port = null,
+
+var nativePort = null,
     message;
 
 function uuid() {
@@ -53,12 +72,12 @@ function appendMessage(text) {
 }
 
 function sendNativeMessage(msg) {
-  if (!port) {
+  if (!nativePort) {
     return;
   }
 
   message = {'body': msg};
-  port.postMessage(message);
+  nativePort.postMessage(message);
   appendMessage("Sent message: <b>" + JSON.stringify(message) + "</b>");
 }
 
@@ -68,41 +87,18 @@ function onNativeMessage(message) {
 
 function onDisconnected() {
   appendMessage("Failed to connect: " + chrome.runtime.lastError.message);
-  port = null;
+  nativePort = null;
 }
 
 function connect() {
   var hostName = "com.google.chrome.example.echo";
   appendMessage("Connecting to native messaging host <b>" + hostName + "</b>")
-  port = chrome.runtime.connectNative(hostName);
-  port.onMessage.addListener(onNativeMessage);
-  port.onDisconnect.addListener(onDisconnected);
+  nativePort = chrome.runtime.connectNative(hostName);
+  nativePort.onMessage.addListener(onNativeMessage);
+  nativePort.onDisconnect.addListener(onDisconnected);
 }
 
 connect();
-
-class DownloadTracker {
-
-  constructor() {
-    this.downloadStateMap = {};
-  }
-
-  addDownload(id, fileName, url) {
-    this.downloadStateMap[id] = {
-      info: {
-        fileName: fileName,
-        url: url
-      },
-      trackingInfo: {
-
-      }
-    }
-  }
-
-
-}
-
-let dt = new DownloadTracker();
 
 
 /* WEB REQUEST HEADER INTERCEPTION/MODIFICATION EXAMPLE */
