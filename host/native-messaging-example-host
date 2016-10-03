@@ -1,11 +1,4 @@
 #!/usr/bin/env python
-# Copyright (c) 2012 The Chromium Authors. All rights reserved.
-# Use of this source code is governed by a BSD-style license that can be
-# found in the LICENSE file.
-
-# A simple native messaging host. Shows a Tkinter dialog with incoming messages
-# that also allows to send message back to the webapp.
-
 import struct
 import sys
 import threading
@@ -16,14 +9,8 @@ import os
 import re
 from inspect import getsourcefile
 from os.path import abspath
-
 # import pipes
 
-# try:
-#   import Tkinter
-#   import tkMessageBox
-# except ImportError:
-#   Tkinter = None
 
 # On Windows, the default I/O mode is O_TEXT. Set this to O_BINARY
 # to avoid unwanted modifications of the input/output streams.
@@ -89,7 +76,7 @@ class AxelThreadSpawn():
         return
 
       self.log("Received %s" % message)
-      # self.onSend(message);
+      # self.sendText(message);
       message = json.loads(message)
 
       send_message('"FILE NAME"')
@@ -155,8 +142,8 @@ class AxelThreadSpawn():
     self.monitorAxelChild(proc)
     # (out, err) = proc.communicate() # Communicate blocks
     self.sendText('AFTER PROC EXEC')
-    # self.onSend(out)
-    # self.log(err)
+    # self.sendText(out)
+    # self.sendText(err)
 
   def monitorAxelChild(self, child):
     self.sendText('MONITOR AXEL CHILD PROC OUTPUT:')
@@ -196,7 +183,7 @@ class AxelThreadSpawn():
         self.dbgLog(out)
         # err = child.stderr.read(1024)
         # self.dbgLog(err, 'dbgerrout')
-        # self.onSend(out)
+        # self.sendText(out)
 
   def dbgLog(self, s, f='dbgout'):
     f = open(f, 'w')
@@ -204,22 +191,13 @@ class AxelThreadSpawn():
 
 
 def Main():
-  # if not Tkinter:
-  #   send_message('"Tkinter python module wasn\'t found. Running in headless ' +
-  #                'mode. Please consider installing Tkinter."')
-  #   read_thread_func(None)
-  #   sys.exit(0)
-
   queue = Queue.Queue()
   send_message('"INSIDE MAIN FN"')
   ats = AxelThreadSpawn(queue)
-  # main_window.master.title('Native Messaging Example')
 
   thread = threading.Thread(target=read_thread_func, args=(queue,))
   # thread.daemon = True
   thread.start()
-
-  # main_window.mainloop()
 
   # sys.exit(0)
 
