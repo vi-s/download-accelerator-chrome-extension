@@ -111,6 +111,7 @@ class AxelThreadSpawn():
     try:
       send_message(jsonstr)
     except IOError:
+      self.dbgLog(jsonstr, 'sendJsonIOError', True)
       print 'failed to send message.'
       sys.exit(1)
 
@@ -120,6 +121,7 @@ class AxelThreadSpawn():
     try:
       send_message(text)
     except IOError:
+      self.dbgLog(text, 'sendTextIOError', True)
       print 'failed to send message.'
       sys.exit(1)
 
@@ -185,8 +187,11 @@ class AxelThreadSpawn():
         # self.dbgLog(err, 'dbgerrout')
         # self.sendText(out)
 
-  def dbgLog(self, s, f='dbgout'):
-    f = open(f, 'w')
+  def dbgLog(self, s, f='dbgout', append=False):
+    mode = 'w'
+    if append:
+      mode = 'a'
+    f = open(f, mode)
     f.write(s)
 
 
