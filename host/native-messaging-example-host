@@ -12,10 +12,12 @@ import threading
 import Queue
 import subprocess
 import json
-import pipes
 import os
+import re
 from inspect import getsourcefile
 from os.path import abspath
+
+# import pipes
 
 # try:
 #   import Tkinter
@@ -63,26 +65,12 @@ def read_thread_func(queue):
       send_message('{"echo": %s}' % text)
 
 
-# if Tkinter:
-#   # Tkinter.Frame (inherit from class for Tkinter frame debug)
-
 class AxelThreadSpawn():
   def __init__(self, queue):
     self.queue = queue
-
-    # Tkinter.Frame.__init__(self)
-    # self.pack()
-
-    # self.text = Tkinter.Text(self)
-    # self.text.grid(row=0, column=0, padx=10, pady=10, columnspan=2)
-    # self.text.config(state=Tkinter.DISABLED, height=10, width=40)
-
-    # self.messageContent = Tkinter.StringVar()
-    # self.sendEntry = Tkinter.Entry(self, textvariable=self.messageContent)
-    # self.sendEntry.grid(row=1, column=0, padx=10, pady=10)
-
-    # self.sendButton = Tkinter.Button(self, text="Send", command=self.onSend)
-    # self.sendButton.grid(row=1, column=1, padx=10, pady=10)
+    self.fileSizeRe = "File size:\s+([0-9]+)\s+.*"
+    self.percentCompleteRe = "\[\s*([0-9]+)%\]"
+    self.transferSpeedRe = "\[\s*([0-9]+\.[0-9]+).*\]"
 
     send_message('"INSIDE WINDOW INIT"')
 
@@ -114,14 +102,14 @@ class AxelThreadSpawn():
       # dir_path = os.path.dirname(os.path.realpath(__file__))
       # self.log(dir_path)
 
-      self.onSend('HOST URL RECVd')
-      self.onSend(message['body']['url'])
-      self.onSend(outopt)
-      self.onSend('BEFORE DBG')
+      self.sendText('HOST URL RECVd')
+      self.sendText(message['body']['url'])
+      self.sendText(outopt)
+      self.sendText('BEFORE DBG')
       # dbg=', '.join(['axel', '-o', outopt, '-n' + 4, message['body']['url']]), 
       dbg = 'axel -o {0} -n4 {1}'.format(outopt, message['body']['url'])
-      self.onSend(dbg)
-      self.onSend('AFTER DBG')
+      self.sendText(dbg)
+      self.sendText('AFTER DBG')
 
       # quotedUrl = pipes.quote(message['body']['url'])
 
@@ -130,7 +118,16 @@ class AxelThreadSpawn():
 
     threading.Timer(1, self.processMessages).start()
 
-  def onSend(self, msg):
+  def sendJson(self, jsono):
+    jsonstr = json.dumps(jsono)
+    self.log('Sending %s' % jsonstr)
+    try:
+      send_message(jsonstr)
+    except IOError:
+      print 'failed to send message.'
+      sys.exit(1)
+
+  def sendText(self, msg):
     text = '{"text": "' + msg + '"}'
     self.log('Sending %s' % text)
     try:
@@ -141,11 +138,6 @@ class AxelThreadSpawn():
 
   def log(self, message):
     return
-
-  # def log(self, message):
-  #   self.text.config(state=Tkinter.NORMAL)
-  #   self.text.insert(Tkinter.END, message + "\n")
-  #   self.text.config(state=Tkinter.DISABLED)
 
   def forkAxel(self, outpath, url):
     send_message('"AXEL FORKED {0} {1}"'.format(outpath, url))
@@ -162,29 +154,53 @@ class AxelThreadSpawn():
     )
     self.monitorAxelChild(proc)
     # (out, err) = proc.communicate() # Communicate blocks
-    self.onSend('AFTER PROC EXEC')
-    self.dbgLog(out)
+    self.sendText('AFTER PROC EXEC')
     # self.onSend(out)
     # self.log(err)
-    self.onSend('AFTER PROC OUTPUT')
 
   def monitorAxelChild(self, child):
-    programTerminated = False
+    self.sendText('MONITOR AXEL CHILD PROC OUTPUT:')
 
-    self.onSend('MONITOR AXEL CHILD PROC OUTPUT:')
+    programTerminated = False
+    fileSizeStr = ''
 
     while not programTerminated:
       out = child.stdout.read(1024)
+      uiUpdateMsg = {}
+
       if out == '' and child.poll() != None:
-          self.onSend('***AXEL CHILD PROGRAM TERMINATED')
-          programTerminated = True
+        self.sendText('***AXEL CHILD PROGRAM TERMINATED')
+        programTerminated = True
       if out != '':
-          self.dbgLog(out)
-          self.onSend(out)
+        # capture file size, ex: "File size: 387973120 bytes"
+        if not fileSizeStr:
+          filesizeg = re.search(self.fileSizeRe, out)
+          if filesizeg:
+            fileSizeStr = filesizeg.groups()[0]
+            self.sendText('AXEL FILE SIZE FOUND: {0}'.format(fileSizeStr))
+
+        # capture speed/%complete, ex: "[  0%]  .......... .......... .......... .......... ..........  [  48.0KB/s]"
+        percentCompleteG = re.search(self.percentCompleteRe, out)
+        transferSpeedG = re.search(self.transferSpeedRe, out)
+
+        if fileSizeStr:
+          uiUpdateMsg['filesize'] = fileSizeStr
+
+        if percentCompleteG:
+          uiUpdateMsg['percent'] = percentCompleteG.groups()[0]
+
+        if transferSpeedG:
+          uiUpdateMsg['transferSpeed'] = transferSpeedG.groups()[0]          
+
+        self.sendJson(uiUpdateMsg)
+        self.dbgLog(out)
+        # err = child.stderr.read(1024)
+        # self.dbgLog(err, 'dbgerrout')
+        # self.onSend(out)
 
   def dbgLog(self, s, f='dbgout'):
     f = open(f, 'w')
-    f.write(s)    
+    f.write(s)
 
 
 def Main():
