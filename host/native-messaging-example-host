@@ -52,7 +52,7 @@ class AxelThreadSpawn():
     self.transferSpeedRe = "\[\s*([0-9]+\.[0-9]+).*\]"
     self.stdoutlock = threading.Lock()
 
-    self.send_message('"INSIDE WINDOW INIT"')
+    self.send_message('"INSIDE AXEL THREAD SPAWN INIT"')
 
     threading.Timer(1, self.processMessages).start()
 
@@ -64,47 +64,6 @@ class AxelThreadSpawn():
       # Write the message itself.
       sys.stdout.write(message)
       sys.stdout.flush()
-
-  def processMessages(self):    
-    self.send_message('"NATIVE HOST HEARTBEAT: process msg loop"')
-
-    while not self.queue.empty():
-      self.send_message('"Q NOT EMPTY"')
-      message = self.queue.get_nowait()
-
-      if message == None:
-        self.quit()
-        return
-
-      self.log("Received %s" % message)
-      # self.sendText(message);
-      message = json.loads(message)
-
-      self.send_message('"FILE NAME"')
-      self.send_message('"{0}"'.format(message['body']['fileName']));
-      self.send_message('"AFTER FILE"')
-
-      outopt = '{0}/{1}'.format('~/octjdl', message['body']['fileName'])
-      outopt = os.path.expanduser(outopt)
-
-      # dir_path = os.path.dirname(os.path.realpath(__file__))
-      # self.log(dir_path)
-
-      self.sendText('HOST URL RECVd')
-      self.sendText(message['body']['url'])
-      self.sendText(outopt)
-      self.sendText('BEFORE DBG')
-      # dbg=', '.join(['axel', '-o', outopt, '-n' + 4, message['body']['url']]), 
-      dbg = 'axel -o {0} -n4 {1}'.format(outopt, message['body']['url'])
-      self.sendText(dbg)
-      self.sendText('AFTER DBG')
-
-      # quotedUrl = pipes.quote(message['body']['url'])
-
-      thread = threading.Thread(target=self.forkAxel, args=(outopt, message['body']['url']))
-      thread.start()
-
-    threading.Timer(1, self.processMessages).start()
 
   def sendJson(self, jsono):
     jsonstr = json.dumps(jsono)
@@ -128,15 +87,52 @@ class AxelThreadSpawn():
       print 'failed to send message.'
       sys.exit(1)
 
-  def log(self, message):
-    return
+  def processMessages(self):    
+    self.send_message('"NATIVE HOST HEARTBEAT: process msg loop"')
 
-  def forkAxel(self, outpath, url):
+    while not self.queue.empty():
+      self.send_message('"Q NOT EMPTY"')
+      message = self.queue.get_nowait()
+
+      if message == None:
+        self.quit()
+        return
+
+      self.log("Received %s" % message)
+      message = json.loads(message)
+
+      downloadid = message['body']['id']
+      # self.send_message('"FILE NAME"')
+      # self.send_message('"{0}"'.format(message['body']['fileName']));
+      # self.send_message('"AFTER FILE"')
+
+      outpath = '{0}/{1}'.format('~/octjdl', message['body']['fileName'])
+      outpath = os.path.expanduser(outpath)
+
+      # dir_path = os.path.dirname(os.path.realpath(__file__))
+      # self.log(dir_path)
+
+      # self.sendText('HOST URL RECVd')
+      # self.sendText(message['body']['url'])
+      # self.sendText(outpath)
+      # self.sendText('BEFORE DBG')
+      dbg=', '.join(['axel', '-o', outpath, '-n4', message['body']['url']])
+      self.sendText(dbg)
+      # self.sendText('AFTER DBG')
+
+      # quotedUrl = pipes.quote(message['body']['url'])
+
+      thread = threading.Thread(target=self.forkAxel, args=(outpath, message['body']['url'], downloadid))
+      thread.start()
+
+    threading.Timer(1, self.processMessages).start()
+
+  def forkAxel(self, outpath, url, downloadid):
     self.send_message('"AXEL FORKED {0} {1}"'.format(outpath, url))
     self.send_message('"THE CWD IS {0}"'.format(os.getcwd()))
     scriptdir = os.path.dirname(abspath(getsourcefile(lambda:0)))
     axel_util = '{0}/axel_util'.format(scriptdir)
-    self.send_message('"SCRIPT LOC {0}"'.format(axel_util))
+    self.send_message('"AXEL SCRIPT LOC {0}"'.format(axel_util))
 
     proc = subprocess.Popen(
         [axel_util, outpath, url],
@@ -144,13 +140,13 @@ class AxelThreadSpawn():
         stderr=subprocess.PIPE,
         shell=False
     )
-    self.monitorAxelChild(proc)
+    self.monitorAxelChild(proc, downloadid)
     # (out, err) = proc.communicate() # Communicate blocks
-    self.sendText('AFTER PROC EXEC')
+    # self.sendText('AFTER PROC EXEC')
     # self.sendText(out)
     # self.sendText(err)
 
-  def monitorAxelChild(self, child):
+  def monitorAxelChild(self, child, downloadid):
     self.sendText('MONITOR AXEL CHILD PROC OUTPUT:')
 
     programTerminated = False
@@ -184,6 +180,8 @@ class AxelThreadSpawn():
         if transferSpeedG:
           uiUpdateMsg['transferSpeed'] = transferSpeedG.groups()[0]          
 
+        uiUpdateMsg['id'] = downloadid
+
         self.sendJson(uiUpdateMsg)
         self.dbgLog(out)
         # err = child.stderr.read(1024)
@@ -197,11 +195,13 @@ class AxelThreadSpawn():
     f = open(f, mode)
     f.write(s)
 
+  def log(self, message):
+    return
 
 def Main():
   queue = Queue.Queue()
   ats = AxelThreadSpawn(queue)
-  ats.send_message('"INSIDE MAIN FN"')
+  # ats.send_message('"INSIDE MAIN FN"')
 
   thread = threading.Thread(target=read_thread_func, args=(queue,))
   # thread.daemon = True

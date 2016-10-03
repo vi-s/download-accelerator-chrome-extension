@@ -6,10 +6,14 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
       return {};
     }
     let fileName = split[1];
+    let id = uuid();
     sendNativeMessage({
+      id: id,
       fileName: fileName,
       url: details.url
     });
+    dt.addDownload(id, fileName, details.url);
+    console.log('uuid', id);
     console.log('k2cc file found:', fileName);
     console.log('@URL:', details.url);
   } else {
@@ -36,6 +40,13 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
 
 var port = null,
     message;
+
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+  });
+}
 
 function appendMessage(text) {
   console.log(text);
@@ -70,9 +81,28 @@ function connect() {
 
 connect();
 
+class DownloadTracker {
+
+  constructor() {
+    this.downloadStateMap = {};
+  }
+
+  addDownload(id, fileName, url) {
+    this.downloadStateMap[id] = {
+      info: {
+        fileName: fileName,
+        url: url
+      },
+      trackingInfo: {
+
+      }
+    }
+  }
 
 
+}
 
+let dt = new DownloadTracker();
 
 
 /* WEB REQUEST HEADER INTERCEPTION/MODIFICATION EXAMPLE */
