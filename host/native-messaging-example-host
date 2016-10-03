@@ -19,14 +19,6 @@ if sys.platform == "win32":
   msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
   msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
 
-# Helper function that sends a message to the webapp.
-def send_message(message):
-   # Write message size.
-  sys.stdout.write(struct.pack('I', len(message)))
-  # Write the message itself.
-  sys.stdout.write(message)
-  sys.stdout.flush()
-
 # Thread that reads messages from the webapp.
 def read_thread_func(queue):
   message_number = 0
@@ -49,8 +41,8 @@ def read_thread_func(queue):
       queue.put(text)
     else:
       # In headless mode just send an echo message back.
-      send_message('{"echo": %s}' % text)
-
+      # self.send_message('{"echo": %s}' % text)
+      pass
 
 class AxelThreadSpawn():
   def __init__(self, queue):
@@ -58,17 +50,26 @@ class AxelThreadSpawn():
     self.fileSizeRe = "File size:\s+([0-9]+)\s+.*"
     self.percentCompleteRe = "\[\s*([0-9]+)%\]"
     self.transferSpeedRe = "\[\s*([0-9]+\.[0-9]+).*\]"
+    self.stdoutlock = threading.Lock()
 
-    send_message('"INSIDE WINDOW INIT"')
+    self.send_message('"INSIDE WINDOW INIT"')
 
     threading.Timer(1, self.processMessages).start()
 
+  # Helper function that sends a message to the webapp.
+  def send_message(self, message):
+    with self.stdoutlock:
+       # Write message size.
+      sys.stdout.write(struct.pack('I', len(message)))
+      # Write the message itself.
+      sys.stdout.write(message)
+      sys.stdout.flush()
 
-  def processMessages(self):
-    send_message('"NATIVE HOST HEARTBEAT: process msg loop"')
+  def processMessages(self):    
+    self.send_message('"NATIVE HOST HEARTBEAT: process msg loop"')
 
     while not self.queue.empty():
-      send_message('"Q NOT EMPTY"')
+      self.send_message('"Q NOT EMPTY"')
       message = self.queue.get_nowait()
 
       if message == None:
@@ -79,9 +80,9 @@ class AxelThreadSpawn():
       # self.sendText(message);
       message = json.loads(message)
 
-      send_message('"FILE NAME"')
-      send_message('"{0}"'.format(message['body']['fileName']));
-      send_message('"AFTER FILE"')
+      self.send_message('"FILE NAME"')
+      self.send_message('"{0}"'.format(message['body']['fileName']));
+      self.send_message('"AFTER FILE"')
 
       outopt = '{0}/{1}'.format('~/octjdl', message['body']['fileName'])
       outopt = os.path.expanduser(outopt)
@@ -109,8 +110,9 @@ class AxelThreadSpawn():
     jsonstr = json.dumps(jsono)
     self.log('Sending %s' % jsonstr)
     try:
-      send_message(jsonstr)
+      self.send_message(jsonstr)
     except IOError:
+      self.send_message('"*******SEND JSON ERROR"')
       self.dbgLog(jsonstr, 'sendJsonIOError', True)
       print 'failed to send message.'
       sys.exit(1)
@@ -119,8 +121,9 @@ class AxelThreadSpawn():
     text = '{"text": "' + msg + '"}'
     self.log('Sending %s' % text)
     try:
-      send_message(text)
+      self.send_message(text)
     except IOError:
+      self.send_message('"*******SEND TEXT ERROR"')
       self.dbgLog(text, 'sendTextIOError', True)
       print 'failed to send message.'
       sys.exit(1)
@@ -129,11 +132,11 @@ class AxelThreadSpawn():
     return
 
   def forkAxel(self, outpath, url):
-    send_message('"AXEL FORKED {0} {1}"'.format(outpath, url))
-    send_message('"THE CWD IS {0}"'.format(os.getcwd()))
+    self.send_message('"AXEL FORKED {0} {1}"'.format(outpath, url))
+    self.send_message('"THE CWD IS {0}"'.format(os.getcwd()))
     scriptdir = os.path.dirname(abspath(getsourcefile(lambda:0)))
     axel_util = '{0}/axel_util'.format(scriptdir)
-    send_message('"SCRIPT LOC {0}"'.format(axel_util))
+    self.send_message('"SCRIPT LOC {0}"'.format(axel_util))
 
     proc = subprocess.Popen(
         [axel_util, outpath, url],
@@ -197,8 +200,8 @@ class AxelThreadSpawn():
 
 def Main():
   queue = Queue.Queue()
-  send_message('"INSIDE MAIN FN"')
   ats = AxelThreadSpawn(queue)
+  ats.send_message('"INSIDE MAIN FN"')
 
   thread = threading.Thread(target=read_thread_func, args=(queue,))
   # thread.daemon = True
