@@ -14,7 +14,6 @@ import subprocess
 import json
 import pipes
 import os
-import time
 from inspect import getsourcefile
 from os.path import abspath
 
@@ -91,7 +90,7 @@ class AxelThreadSpawn():
 
 
   def processMessages(self):
-    send_message('"NATIVE HOST HEARTBEAT: process msg"')
+    send_message('"NATIVE HOST HEARTBEAT: process msg loop"')
 
     while not self.queue.empty():
       send_message('"Q NOT EMPTY"')
@@ -161,13 +160,31 @@ class AxelThreadSpawn():
         stderr=subprocess.PIPE,
         shell=False
     )
-    (out, err) = proc.communicate() # Communicate blocks
+    self.monitorAxelChild(proc)
+    # (out, err) = proc.communicate() # Communicate blocks
     self.onSend('AFTER PROC EXEC')
-    f = open('dbgout', 'w')
-    f.write(out)
+    self.dbgLog(out)
     # self.onSend(out)
     # self.log(err)
     self.onSend('AFTER PROC OUTPUT')
+
+  def monitorAxelChild(self, child):
+    programTerminated = False
+
+    self.onSend('MONITOR AXEL CHILD PROC OUTPUT:')
+
+    while not programTerminated:
+      out = child.stdout.read(1024)
+      if out == '' and child.poll() != None:
+          self.onSend('***AXEL CHILD PROGRAM TERMINATED')
+          programTerminated = True
+      if out != '':
+          self.dbgLog(out)
+          self.onSend(out)
+
+  def dbgLog(self, s, f='dbgout'):
+    f = open(f, 'w')
+    f.write(s)    
 
 
 def Main():
