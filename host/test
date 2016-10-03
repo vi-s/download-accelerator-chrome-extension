@@ -5,12 +5,10 @@ import threading
 import subprocess
 import pipes
 
-outopt = '{0}/{1}'.format('~/octjdl', 'zzFTxx99.part4.rar')
-url = "http://prx-166.keep2share.cc/ce554092fd0ac/c44a02e1da9cb/2de742cfc829a?temp_url_sig=a12572515a7b90fec4410f6566f108dc413013d24bc9d5d3912dfea27530f62f4b64048b52fd90c6e8053e89dd8ef1116ba6cf0587eb31d19374094dea97de28&temp_url_expires=1475574093&id=40a6c42acbb89&node_id=166&project=moneyplatform&user_id=19102&name=zzFTxx99.part4.rar"
-url = pipes.quote(url)
-
+outpath = '{0}/{1}'.format('~/octjdl', 'testjp.rar')
+url = "http://prx-157.keep2share.cc/086c8fc3db790/6fbecea47e4da/1927b1215dcf9?temp_url_sig=1c608bd36374bfd696bfda2a4ee1bdd0a0239d4eef22c9ad3413d86623821c4090b3876d4142d242b86e57520fb4d922b7ae29d83b4bc2c2f87f35206e414696&temp_url_expires=1475622069&id=c38496f0a4609&node_id=157&project=moneyplatform&user_id=19102&name=SHI004.avi"
 proc = subprocess.Popen(
-    ['./axel_util', outopt, url],
+    ['./axel_util', outpath, url],
     stdout=subprocess.PIPE,
     stderr=subprocess.PIPE,
     shell=False

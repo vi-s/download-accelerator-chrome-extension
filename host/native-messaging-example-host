@@ -15,6 +15,8 @@ import json
 import pipes
 import os
 import time
+from inspect import getsourcefile
+from os.path import abspath
 
 # try:
 #   import Tkinter
@@ -148,17 +150,23 @@ class AxelThreadSpawn():
 
   def forkAxel(self, outpath, url):
     send_message('"AXEL FORKED {0} {1}"'.format(outpath, url))
+    send_message('"THE CWD IS {0}"'.format(os.getcwd()))
+    scriptdir = os.path.dirname(abspath(getsourcefile(lambda:0)))
+    axel_util = '{0}/axel_util'.format(scriptdir)
+    send_message('"SCRIPT LOC {0}"'.format(axel_util))
 
     proc = subprocess.Popen(
-        ['./axel_util', outpath, url],
+        [axel_util, outpath, url],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=False
     )
     (out, err) = proc.communicate() # Communicate blocks
     self.onSend('AFTER PROC EXEC')
-    self.onSend(out)
-    self.log(err)
+    f = open('dbgout', 'w')
+    f.write(out)
+    # self.onSend(out)
+    # self.log(err)
     self.onSend('AFTER PROC OUTPUT')
 
 
