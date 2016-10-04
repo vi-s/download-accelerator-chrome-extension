@@ -1,26 +1,3 @@
-class DownloadTracker {
-
-  constructor() {
-    this.downloadStateMap = {};
-  }
-
-  addDownload(id, fileName, url) {
-    this.downloadStateMap[id] = {
-      info: {
-        fileName: fileName,
-        url: url
-      },
-      trackingInfo: {
-
-      }
-    }
-  }
-}
-
-
-let dt = new DownloadTracker();
-
-// dt.addDownload(id, fileName, details.url);
 
 // message -> background page
 chrome.extension.sendMessage({
@@ -31,7 +8,8 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   // console.log(bg msg rcv);
 
   switch(request.type) {
-    case "frombg":
+    case "dlprogmsg":
+      document.getElementById('progContainer').innerHTML = JSON.stringify(request.state);
       console.log(request);
       break;
     // case "color-divs":
