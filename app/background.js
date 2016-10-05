@@ -6,7 +6,7 @@ class DownloadTracker {
 
   addDownload(id, fileName, url) {
     this.downloadStateMap[id] = {
-      info: {
+      fileInfo: {
         fileName: fileName,
         url: url
       },
@@ -23,13 +23,12 @@ class DownloadTracker {
     dlState.trackingInfo.filesize = msg.filesize;
     dlState.trackingInfo.percent = msg.percent;
     dlState.trackingInfo.transferSpeed = msg.transferSpeed;
+    dlState.trackingInfo.eta = this.getETA(msg);
 
     chrome.extension.sendMessage({
       type: 'dlprogmsg',
       state: dlState
     });
-
-    console.log(this.getETA(msg));
   }
 
   saveDLState() {
@@ -46,36 +45,35 @@ class DownloadTracker {
 
     let etaSeconds = (estimatedBytesLeft/1000) * (1 / speedK);
     let retStr;
-    return etaSeconds
-    // if (etaSeconds < 60) { // less than one minute
-    //   let secondsStr = addZeroToTime(etaSeconds);
-    //   retStr = `00:00:${secondsStr}`;
-    // } else if (etaSeconds < 60*60) { // less than 1 hour
-    //   let minutes = Math.floor(etaSeconds / 60);
-    //   let seconds = Math.ceil(((etaSeconds / 60) - minutes) * 60)
-    //   let minutesStr = addZeroToTime(minutes);
-    //   let secondsStr = addZeroToTime(seconds);
-    //   retStr = `00:${minutesStr}:${secondsStr}`;
-    // } else { // an hour or more
-    //   let hours = Math.floor(etaSeconds / (60 * 60));
-    //   let secondsLeft = Math.ceil(((etaSeconds / (60 * 60)) - hours) * 60); // second excluding hours
-    //   let minutes = Math.floor(secondsLeft / 60);
-    //   let seconds = Math.ceil(((etaSeconds / 60) - minutes) * 60)
-    //   let hoursStr = addZeroToTime(hours);
-    //   let minutesStr = addZeroToTime(minutes);
-    //   let secondsStr = addZeroToTime(seconds);
-    //   retStr = `${hoursStr}:${minutesStr}:${secondsStr}`;
-    // }
+    if (etaSeconds < 60) { // less than one minute
+      let secondsStr = addZeroToTime(etaSeconds);
+      retStr = `00:00:${secondsStr}`;
+    } else if (etaSeconds < 60*60) { // less than 1 hour
+      let minutes = Math.floor(etaSeconds / 60);
+      let seconds = Math.ceil(((etaSeconds / 60) - minutes) * 60)
+      let minutesStr = addZeroToTime(minutes);
+      let secondsStr = addZeroToTime(seconds);
+      retStr = `00:${minutesStr}:${secondsStr}`;
+    } else { // an hour or more
+      let hours = Math.floor(etaSeconds / (60 * 60));
+      let secondsLeft = Math.ceil(((etaSeconds / (60 * 60)) - hours) * 60); // second excluding hours
+      let minutes = Math.floor(secondsLeft / 60);
+      let seconds = Math.ceil(((etaSeconds / 60) - minutes) * 60)
+      let hoursStr = addZeroToTime(hours);
+      let minutesStr = addZeroToTime(minutes);
+      let secondsStr = addZeroToTime(seconds);
+      retStr = `${hoursStr}:${minutesStr}:${secondsStr}`;
+    }
 
-    // return retStr;
+    return retStr;
 
-    // function addZeroToTime(time) {
-    //   if (time < 10) {
-    //     return `0${time}`
-    //   } else {
-    //     retStr = `${time}`
-    //   }
-    // }
+    function addZeroToTime(time) {
+      if (time < 10) {
+        return `0${time}`
+      } else {
+        return `${time}`
+      }
+    }
   } 
 }
 
