@@ -38,17 +38,16 @@ class DownloadTracker {
   getETA(msg) {
     let percentDone = parseFloat(msg.percent),
         speedK = parseFloat(msg.transferSpeed), // speed kbps
-        filesize = parseFloat(msg.filesize);
-
-    let percentLeft = 100 - percentDone,
-        estimatedBytesLeft = (percentLeft/100.0) * filesize;
-
-    let etaSeconds = (estimatedBytesLeft/1000) * (1 / speedK);
+        filesize = parseFloat(msg.filesize),
+        percentLeft = 100 - percentDone,
+        estimatedBytesLeft = (percentLeft / 100.0) * filesize,
+        etaSeconds = (estimatedBytesLeft / 1000) * (1 / speedK);
+    
     if (etaSeconds < 60) { // less than one minute
       return `00:00:${addZeroToTime(etaSeconds)}`;
     } else if (etaSeconds < 60*60) { // less than 1 hour
       let minutes = Math.floor(etaSeconds / 60);
-      let seconds = Math.ceil(((etaSeconds / 60) - minutes) * 60)
+      let seconds = Math.floor(etaSeconds - (minutes * 60));
       return `00:${addZeroToTime(minutes)}:${addZeroToTime(seconds)}`;
     } else { // an hour or more
       let hours = Math.floor(etaSeconds / (60 * 60));
@@ -59,13 +58,9 @@ class DownloadTracker {
     }
 
     function addZeroToTime(time) {
-      if (time < 10) {
-        return `0${time}`
-      } else {
-        return `${time}`
-      }
+      return time < 10 ? `0${time}` : `${time}`;
     }
-  } 
+  }
 }
 
 
