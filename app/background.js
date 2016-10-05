@@ -44,28 +44,19 @@ class DownloadTracker {
         estimatedBytesLeft = (percentLeft/100.0) * filesize;
 
     let etaSeconds = (estimatedBytesLeft/1000) * (1 / speedK);
-    let retStr;
     if (etaSeconds < 60) { // less than one minute
-      let secondsStr = addZeroToTime(etaSeconds);
-      retStr = `00:00:${secondsStr}`;
+      return `00:00:${addZeroToTime(etaSeconds)}`;
     } else if (etaSeconds < 60*60) { // less than 1 hour
       let minutes = Math.floor(etaSeconds / 60);
       let seconds = Math.ceil(((etaSeconds / 60) - minutes) * 60)
-      let minutesStr = addZeroToTime(minutes);
-      let secondsStr = addZeroToTime(seconds);
-      retStr = `00:${minutesStr}:${secondsStr}`;
+      return `00:${addZeroToTime(minutes)}:${addZeroToTime(seconds)}`;
     } else { // an hour or more
       let hours = Math.floor(etaSeconds / (60 * 60));
-      let secondsLeft = Math.ceil(((etaSeconds / (60 * 60)) - hours) * 60); // second excluding hours
-      let minutes = Math.floor(secondsLeft / 60);
-      let seconds = Math.ceil(((etaSeconds / 60) - minutes) * 60)
-      let hoursStr = addZeroToTime(hours);
-      let minutesStr = addZeroToTime(minutes);
-      let secondsStr = addZeroToTime(seconds);
-      retStr = `${hoursStr}:${minutesStr}:${secondsStr}`;
+      let nonHRSeconds = etaSeconds - (hours * 60 * 60); // second excluding hours
+      let minutes = Math.floor(nonHRSeconds / 60);
+      let seconds = etaSeconds - (hours * 60 * 60) - (minutes * 60);
+      return `${addZeroToTime(hours)}:${addZeroToTime(minutes)}:${addZeroToTime(seconds)}`;
     }
-
-    return retStr;
 
     function addZeroToTime(time) {
       if (time < 10) {

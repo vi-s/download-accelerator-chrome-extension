@@ -21,9 +21,6 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   return true;
 });
 
-
-var port = chrome.extension.connect({name: "Download Accelerator"});
-port.postMessage("Hi BackGround");
-port.onMessage.addListener(function(msg) {
-  console.log("message recieved"+ msg);
-});
+function createDownloadDiv() {
+  
+}
