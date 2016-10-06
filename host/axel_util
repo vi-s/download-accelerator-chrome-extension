@@ -1,7 +1,6 @@
 #!/bin/bash
 # $1 = output file path
 # $2 = url
-basedlfp="${1%/*}" # extract download folder base fp
-mkdir -p "$basedlfp"
+mkdir -p "${1%/*}"
 PATH=$PATH:/usr/local/bin:/usr/bin
 axel -o "$1" -n4 $2

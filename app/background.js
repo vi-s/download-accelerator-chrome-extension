@@ -51,8 +51,8 @@ class DownloadTracker {
       return `00:${addZeroToTime(minutes)}:${addZeroToTime(seconds)}`;
     } else { // an hour or more
       let hours = Math.floor(etaSeconds / (60 * 60));
-      let nonHRSeconds = etaSeconds - (hours * 60 * 60); // second excluding hours
-      let minutes = Math.floor(nonHRSeconds / 60);
+      let nonHrSeconds = etaSeconds - (hours * 60 * 60); // second excluding hours
+      let minutes = Math.floor(nonHrSeconds / 60);
       let seconds = etaSeconds - (hours * 60 * 60) - (minutes * 60);
       return `${addZeroToTime(hours)}:${addZeroToTime(minutes)}:${addZeroToTime(seconds)}`;
     }
@@ -83,7 +83,7 @@ function isDLProgressMsg(message) {
 
   if (message.id && message.filesize && message.percent && message.transferSpeed) {
     dt.onDownloadProgMsg(message);
-  }  
+  }
 }
 
 function appendMessage(text) {

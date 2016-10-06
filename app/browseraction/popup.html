@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="DownloadAccelerator">
 	<head>
 		<title>Title of the document</title>
+	  <script src="angular.min.js"></script>
 		<script src="popup.js"></script>
+	  <script src="./DownloadDisplay/directive.js"></script>
 	</head>
 
 	<body>
 		<div id="progContainer">
+			<download-display ng-include="'./DownloadDisplay/template.html'"></download-display>
 		</div>
 	</body>
 </html>

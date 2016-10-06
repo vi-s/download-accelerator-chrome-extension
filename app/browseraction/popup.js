@@ -1,3 +1,8 @@
+angular.module('DownloadAccelerator', []);
+
+// angular.module('DownloadAccelerator').controller('progressController', function($scope) {
+//     $scope.test = 'Hello World, From Controlla';
+// });
 
 // message -> background page
 chrome.extension.sendMessage({
@@ -22,5 +27,5 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 function createDownloadDiv() {
-  
+
 }
