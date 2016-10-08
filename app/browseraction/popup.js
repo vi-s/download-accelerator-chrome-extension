@@ -5,10 +5,12 @@ class DownloadsStateUIManager {
   constructor(downmap, downlist) {
     this.downloadsStateMap = downmap;
     this.downloadStateList = downlist;
+
+    this.populateDownloadStateFromCache();
   }
 
-  onInit(cb) {
-    // populate cached download state map and list from localstorage
+  // populate cached download state map and list from localstorage
+  populateDownloadStateFromCache() {
     let cachedStateMap = localStorage.getItem('download-accel-ext-download-state-map');
     if (!cachedStateMap) {
       return;
@@ -26,9 +28,7 @@ class DownloadsStateUIManager {
         this.downloadStateList[cachedState.fileInfo.arrayIdx] = cachedState;
         this.downloadsStateMap[cachedState.fileInfo.id] = cachedState;
       }
-    }
-
-    cb()
+    }    
   }
 
   onDownloadStateMsg(stateMsg, cb) {
@@ -61,7 +61,6 @@ angular.module('DownloadAccelerator').controller('progressController', function(
   $scope.downloadStateList = [];
 
   let dsui = new DownloadsStateUIManager($scope.downloadsStateMap, $scope.downloadStateList);
-  dsui.onInit(() => {});
 
   chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
     switch(request.type) {
