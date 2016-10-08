@@ -3,34 +3,9 @@
 angular.module('DownloadAccelerator', []);
 
 angular.module('DownloadAccelerator').controller('progressController', function($scope) {
-  $scope.test = 'Hello World, From Controlla';
+  $scope.test = '...test from ctrl';
   $scope.downloadsMap = {}; // read from local storage on popup init, before any progress msgs from bg page
   $scope.downloadsList = [];
-
-  $scope.downloadsMap['1'] = {
-    fileInfo: {
-      fileName: 'A TEST FILENAME',
-      dateTimeAdded: new Date("2016-10-08T07:23:28.554Z")
-    }
-  };
-
-  $scope.downloadsMap['2'] = {
-    fileInfo: {
-      fileName: 'ZZZZ ANOTHER TEST FILENAME',
-      dateTimeAdded: new Date("2016-10-08T07:24:08.432Z")
-    }
-  };
-
-  $scope.downloadsMap['3'] = {
-    fileInfo: {
-      fileName: 'YYYY ANOTHER TEST FILENAME',
-      dateTimeAdded: new Date("2016-10-08T07:24:22.335Z")
-    }
-  };
-
-  $scope.downloadsList.push($scope.downloadsMap['2']);
-  $scope.downloadsList.push($scope.downloadsMap['1']);
-  $scope.downloadsList.push($scope.downloadsMap['3']);
 
   class DownloadsStateUIManager {
     constructor() {
@@ -39,23 +14,35 @@ angular.module('DownloadAccelerator').controller('progressController', function(
     }
 
     onDownloadStateMsg(stateMsg) {
+      // stringifed timestamp -> date obj
+      if (stateMsg && stateMsg.fileInfo && stateMsg.fileInfo.dateTimeAdded) {
+        stateMsg.fileInfo.dateTimeAdded = new Date(JSON.parse(stateMsg.fileInfo.dateTimeAdded));
+      }
+
       if (!this.downloadsMap[stateMsg.fileInfo.id]) {
-        this.onNewDownloadStateMsg(stateMsg);
+        stateMsg.fileInfo.arrayIdx = this.downloadsList.length;
+        this.downloadsList.push(stateMsg);
+      } else {
+        let oldState = this.downloadsMap[stateMsg.fileInfo.id];
+        let arrayIdx = oldState.fileInfo.arrayIdx;
+        stateMsg.fileInfo.arrayIdx = arrayIdx;
+        this.downloadsList[arrayIdx] = stateMsg;
       }
       this.downloadsMap[stateMsg.fileInfo.id] = stateMsg;
+      $scope.$apply();
     }
 
-    onNewDownloadStateMsg(stateMsg) {
-      this.downloadsList.push(stateMsg);
-    }
+
   }
 
-  let dsui = new DownloadsStateUIManager($scope.downloads);
+  let dsui = new DownloadsStateUIManager();
 
   chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.type) {
       case "dlprogmsg":
         // document.getElementById('progContainer').innerHTML = JSON.stringify(request.state);
+        console.log('msg recvd');
+        console.log('dl list len:', $scope.downloadsList.length);
         dsui.onDownloadStateMsg(request.state);
         break;
       default:

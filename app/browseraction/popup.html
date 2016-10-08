@@ -10,7 +10,7 @@
 	<body ng-controller="progressController">
 		<span ng-bind="test"></span>
 
-		<div id="progContainer" ng-repeat="state in downloadsList | orderBy: '-fileInfo.dateTimeAdded.getTime()'">
+		<div id="progContainer" ng-repeat="state in downloadsList | orderBy: '-fileInfo.dateTimeAdded.getTime()' track by $index">
 			<download-display 
 				download-state="state" 
 				>

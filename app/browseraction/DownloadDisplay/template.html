@@ -1,3 +1,13 @@
-<div ng-bind="test3"></div>
-<span ng-bind="downloadState.fileInfo.fileName"></span>
-<span ng-bind="downloadState.fileInfo.dateTimeAdded"></span>
+<h3>
+	<span ng-bind="downloadState.fileInfo.fileName"></span>
+</h3>
+<div ng-bind="downloadState.fileInfo.id"></div>
+<div ng-bind="downloadState.fileInfo.url"></div>
+<div>{{downloadState.fileInfo.dateTimeAdded | json}}</div>
+<b>Progress:</b>
+<div>
+	<span ng-bind="downloadState.trackingInfo.percent"></span>
+	<span ng-bind="downloadState.trackingInfo.filesize"></span>
+	<span ng-bind="downloadState.trackingInfo.transferSpeed"></span>
+	<span ng-bind="downloadState.trackingInfo.eta"></span>
+</div>

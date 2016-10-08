@@ -10,7 +10,7 @@ class DownloadStateNativeMessageBroker {
         id: id,
         fileName: fileName,
         url: url,
-        dateTimeAdded: new Date()
+        dateTimeAdded: JSON.stringify(new Date())
       },
       trackingInfo: {}
     }
