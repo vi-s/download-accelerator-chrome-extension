@@ -5,6 +5,9 @@
 <div ng-bind="downloadState.fileInfo.url"></div>
 <div>{{downloadState.fileInfo.dateTimeAdded | json}}</div>
 <b>Progress:</b>
+
+<uib-progressbar class="progress-striped active" value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0" type="success"></uib-progressbar>
+
 <div>
 	<span ng-if="downloadState.trackingInfo.percent">
 		{{downloadState.trackingInfo.percent}}%

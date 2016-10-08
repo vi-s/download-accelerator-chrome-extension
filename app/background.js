@@ -59,7 +59,7 @@ class DownloadStateWriter {
         etaSeconds = (estimatedBytesLeft / 1000) * (1 / speedK);
     
     if (etaSeconds < 60) { // less than one minute
-      return `00:00:${addZeroToTime(etaSeconds)}`;
+      return `00:00:${addZeroToTime(Math.floor(etaSeconds))}`;
     } else if (etaSeconds < 60*60) { // less than 1 hour
       let minutes = Math.floor(etaSeconds / 60);
       let seconds = Math.floor(etaSeconds - (minutes * 60));

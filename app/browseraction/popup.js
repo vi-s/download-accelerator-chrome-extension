@@ -1,3 +1,6 @@
+// Angular Module Setup
+angular.module('DownloadAccelerator', ['ui.bootstrap']);
+
 // Download state reader / receiver. Responsible for initially reading cached download state map
 // from local storage, receiving messages from native app brokered through background page
 // DownloadStateWriter class, and updating models used to update the UI.
@@ -51,9 +54,7 @@ class DownloadsStateUIManager {
 
 }
 
-// Angular Setup
-angular.module('DownloadAccelerator', []);
-
+// Angular Controller Setup
 angular.module('DownloadAccelerator').controller('progressController', function($scope) {
   $scope.test = '...test from ctrl';
   // read from local storage on popup init, before any progress msgs from bg page
