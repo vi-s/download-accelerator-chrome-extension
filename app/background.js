@@ -1,4 +1,7 @@
-class DownloadStateNativeMessageBroker {
+// Native message broker between chrome web extension and native host application
+// Responsible for receiving messages, forwarding those to the popup page, and
+// writing download state to local storage.
+class DownloadStateWriter {
 
   constructor() {
     this.downloadStateMap = {};
@@ -76,7 +79,7 @@ class DownloadStateNativeMessageBroker {
 }
 
 
-let dt = new DownloadStateNativeMessageBroker();
+let dt = new DownloadStateWriter();
 
 var nativePort = null,
     message;
