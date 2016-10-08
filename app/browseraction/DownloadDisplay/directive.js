@@ -4,8 +4,11 @@
 
 angular.module('DownloadAccelerator').directive('downloadDisplay', function() {
 	  return {
-	  	// I have used ng-include instead of template or templateUrl
-	    // template: '<div ng-bind="test3"></div>',
+	    templateUrl: '/browseraction/DownloadDisplay/template.html',
+	    restrict: 'E',
+	    scope: {
+	    	downloadState: '='
+	    },
 	    controller: function($scope) {
 	      $scope.test3 = "HI FROM DIRECTIVE 2222";
 	    }

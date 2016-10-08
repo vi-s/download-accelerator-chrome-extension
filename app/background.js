@@ -1,4 +1,4 @@
-class DownloadTracker {
+class DownloadStateNativeMessageBroker {
 
   constructor() {
     this.downloadStateMap = {};
@@ -7,8 +7,10 @@ class DownloadTracker {
   addDownload(id, fileName, url) {
     this.downloadStateMap[id] = {
       fileInfo: {
+        id: id,
         fileName: fileName,
-        url: url
+        url: url,
+        dateTimeAdded: new Date()
       },
       trackingInfo: {}
     }
@@ -64,7 +66,7 @@ class DownloadTracker {
 }
 
 
-let dt = new DownloadTracker();
+let dt = new DownloadStateNativeMessageBroker();
 
 var nativePort = null,
     message;

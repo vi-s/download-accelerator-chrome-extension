@@ -7,9 +7,15 @@
 	  <script src="./DownloadDisplay/directive.js"></script>
 	</head>
 
-	<body>
-		<div id="progContainer">
-			<download-display ng-include="'./DownloadDisplay/template.html'"></download-display>
+	<body ng-controller="progressController">
+		<span ng-bind="test"></span>
+
+		<div id="progContainer" ng-repeat="state in downloadsList | orderBy: '-fileInfo.dateTimeAdded.getTime()'">
+			<download-display 
+				download-state="state" 
+				>
+
+			</download-display>
 		</div>
 	</body>
 </html>
