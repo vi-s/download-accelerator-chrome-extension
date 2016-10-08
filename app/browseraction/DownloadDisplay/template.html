@@ -6,8 +6,14 @@
 <div>{{downloadState.fileInfo.dateTimeAdded | json}}</div>
 <b>Progress:</b>
 <div>
-	<span ng-bind="downloadState.trackingInfo.percent"></span>
-	<span ng-bind="downloadState.trackingInfo.filesize"></span>
-	<span ng-bind="downloadState.trackingInfo.transferSpeed"></span>
+	<span ng-if="downloadState.trackingInfo.percent">
+		{{downloadState.trackingInfo.percent}}%
+	</span>
+	<span ng-if="downloadState.trackingInfo.filesize">
+		{{downloadState.trackingInfo.filesize}} bytes
+	</span>
+	<span ng-if="downloadState.trackingInfo.transferSpeed">
+		{{downloadState.trackingInfo.transferSpeed}} Kb/s
+	</span>
 	<span ng-bind="downloadState.trackingInfo.eta"></span>
 </div>
