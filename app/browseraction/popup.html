@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="DownloadAccelerator">
+<html>
 	<head>
 		<title>Title of the document</title>
 	  <script src="angular.min.js"></script>
@@ -7,15 +7,11 @@
 	  <script src="./DownloadDisplay/directive.js"></script>
 	</head>
 
-	<body ng-controller="progressController">
+	<body ng-app="DownloadAccelerator" ng-controller="progressController">
 		<span ng-bind="test"></span>
 
-		<div id="progContainer" ng-repeat="state in downloadsList | orderBy: '-fileInfo.dateTimeAdded.getTime()' track by $index">
-			<download-display 
-				download-state="state" 
-				>
-
-			</download-display>
+		<div id="progContainer" ng-repeat="state in downloadStateList | orderBy: '-fileInfo.dateTimeAdded.getTime()' track by $index">
+			<download-display download-state="state"></download-display>
 		</div>
 	</body>
 </html>

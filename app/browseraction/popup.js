@@ -1,15 +1,31 @@
-
-// Angular Setup
-angular.module('DownloadAccelerator', []);
-
 class DownloadsStateUIManager {
   constructor(downmap, downlist) {
-    this.downloadsMap = downmap;
-    this.downloadsList = downlist;
+    this.downloadsStateMap = downmap;
+    this.downloadStateList = downlist;
   }
 
-  onInit() {
-    console.log('I HAVE BEEN INIT');
+  onInit(cb) {
+    // populate cached download state map and list from localstorage
+    let cachedStateMap = localStorage.getItem('download-accel-ext-download-state-map');
+    if (!cachedStateMap) {
+      return;
+    }
+
+    cachedStateMap = JSON.parse(cachedStateMap);
+    for (let downloadId in cachedStateMap) {
+      if (cachedStateMap.hasOwnProperty(downloadId)) {
+        let cachedState = cachedStateMap[downloadId];
+        if (cachedState && cachedState.fileInfo && cachedState.fileInfo.dateTimeAdded) {
+          cachedState.fileInfo.dateTimeAdded = new Date(JSON.parse(cachedState.fileInfo.dateTimeAdded));
+        }
+
+        cachedState.fileInfo.arrayIdx = this.downloadStateList.length;
+        this.downloadStateList[cachedState.fileInfo.arrayIdx] = cachedState;
+        this.downloadsStateMap[cachedState.fileInfo.id] = cachedState;
+      }
+    }
+
+    cb()
   }
 
   onDownloadStateMsg(stateMsg, cb) {
@@ -18,28 +34,31 @@ class DownloadsStateUIManager {
       stateMsg.fileInfo.dateTimeAdded = new Date(JSON.parse(stateMsg.fileInfo.dateTimeAdded));
     }
 
-    if (!this.downloadsMap[stateMsg.fileInfo.id]) {
-      stateMsg.fileInfo.arrayIdx = this.downloadsList.length;
+    if (!this.downloadsStateMap[stateMsg.fileInfo.id]) {
+      stateMsg.fileInfo.arrayIdx = this.downloadStateList.length;
     } else {
-      let oldState = this.downloadsMap[stateMsg.fileInfo.id];
+      let oldState = this.downloadsStateMap[stateMsg.fileInfo.id];
       stateMsg.fileInfo.arrayIdx = oldState.fileInfo.arrayIdx;
     }
 
-    this.downloadsList[stateMsg.fileInfo.arrayIdx] = stateMsg;
-    this.downloadsMap[stateMsg.fileInfo.id] = stateMsg;
+    this.downloadStateList[stateMsg.fileInfo.arrayIdx] = stateMsg;
+    this.downloadsStateMap[stateMsg.fileInfo.id] = stateMsg;
     cb();
   }
 
 }
 
+// Angular Setup
+angular.module('DownloadAccelerator', []);
+
 angular.module('DownloadAccelerator').controller('progressController', function($scope) {
   $scope.test = '...test from ctrl';
   // read from local storage on popup init, before any progress msgs from bg page
-  $scope.downloadsMap = {};
-  $scope.downloadsList = [];
+  $scope.downloadsStateMap = {};
+  $scope.downloadStateList = [];
 
-  let dsui = new DownloadsStateUIManager($scope.downloadsMap, $scope.downloadsList);
-  dsui.onInit();
+  let dsui = new DownloadsStateUIManager($scope.downloadsStateMap, $scope.downloadStateList);
+  dsui.onInit(() => {});
 
   chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
     switch(request.type) {

@@ -2,6 +2,11 @@ class DownloadStateNativeMessageBroker {
 
   constructor() {
     this.downloadStateMap = {};
+
+    let cachedState = localStorage.getItem('download-accel-ext-download-state-map');
+    if (cachedState) {
+      this.downloadStateMap = JSON.parse(cachedState);
+    }
   }
 
   addDownload(id, fileName, url) {
@@ -14,6 +19,8 @@ class DownloadStateNativeMessageBroker {
       },
       trackingInfo: {}
     }
+
+    this.saveDLState();
   }
 
   onDownloadProgMsg(msg) {
@@ -27,6 +34,8 @@ class DownloadStateNativeMessageBroker {
     dlState.trackingInfo.transferSpeed = msg.transferSpeed;
     dlState.trackingInfo.eta = this.getETA(msg);
 
+    this.saveDLState();
+
     chrome.extension.sendMessage({
       type: 'dlprogmsg',
       state: dlState
@@ -34,6 +43,7 @@ class DownloadStateNativeMessageBroker {
   }
 
   saveDLState() {
+    localStorage.setItem('download-accel-ext-download-state-map', JSON.stringify(this.downloadStateMap));
     return;
   }
 
