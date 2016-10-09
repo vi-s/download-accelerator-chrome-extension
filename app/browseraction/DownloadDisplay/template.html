@@ -6,14 +6,14 @@
 <div>{{downloadState.fileInfo.dateTimeAdded | json}}</div>
 <b>Progress:</b>
 
-<uib-progressbar class="progress-striped active" value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0" type="success"></uib-progressbar>
+<uib-progressbar class="progress-striped active" value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0" type="success">{{downloadState.trackingInfo.percent}}%</uib-progressbar>
 
 <div>
-	<span ng-if="downloadState.trackingInfo.percent">
+<!-- 	<span ng-if="downloadState.trackingInfo.percent">
 		{{downloadState.trackingInfo.percent}}%
-	</span>
-	<span ng-if="downloadState.trackingInfo.filesize">
-		{{downloadState.trackingInfo.filesize}} bytes
+	</span> -->
+	<span ng-if="downloadState.trackingInfo.filesize"
+				ng-bind="humanFileSize(downloadState.trackingInfo.filesize, true)">
 	</span>
 	<span ng-if="downloadState.trackingInfo.transferSpeed">
 		{{downloadState.trackingInfo.transferSpeed}} Kb/s
