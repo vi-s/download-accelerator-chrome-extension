@@ -57,7 +57,7 @@ class DownloadStateWriter {
         percentLeft = 100 - percentDone,
         estimatedBytesLeft = (percentLeft / 100.0) * filesize,
         etaSeconds = (estimatedBytesLeft / 1000) * (1 / speedK);
-    
+
     if (etaSeconds < 60) { // less than one minute
       return `00:00:${addZeroToTime(Math.floor(etaSeconds))}`;
     } else if (etaSeconds < 60*60) { // less than 1 hour
@@ -164,7 +164,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
     }
     var fileName = split[1];
     sendDownloadInitNativeMsg(fileName);
-  } else if (details.url.indexOf('joker') > -1) {
+  } else if (details.url.indexOf('joker') > -1 && details.url.indexOf('//fs05') > -1) {
     let split = details.url.split('/');
     var fileName = split[split.length - 1]
 
@@ -172,7 +172,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
       url: 'https://filejoker.net',
       name: 'joker_cook'
     }, (cookie) => {
-      let cookieHeaderStr = `Cookie: ${cookie.name}=${cookie.value}`
+      let cookieHeaderStr = cookie ? `Cookie: ${cookie.name}=${cookie.value}` : '';
       sendDownloadInitNativeMsg(fileName, cookieHeaderStr);
     });
 
@@ -182,7 +182,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
 
   function sendDownloadInitNativeMsg(fileName, cookieHeaderStr) {
     let id = uuid();
-   
+
     let downloadMsg = {
       id: id,
       fileName: fileName,
@@ -209,7 +209,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
   urls: [
     // '<all_urls>',
     '*://*.keep2share.cc/*',
-    '*://*.filejoker.net/*'    
+    '*://*.filejoker.net/*'
   ],
   types: [ 'main_frame' ]
 },
