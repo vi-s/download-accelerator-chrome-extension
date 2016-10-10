@@ -164,7 +164,7 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
     }
     var fileName = split[1];
     sendDownloadInitNativeMsg(fileName);
-  } else if (details.url.indexOf('joker') > -1 && details.url.indexOf('//fs05') > -1) {
+  } else if (details.url.indexOf('joker') > -1 && /\/\/fs[0-9 ]{2}\.filejoker/.test(details.url)) {
     let split = details.url.split('/');
     var fileName = split[split.length - 1]
 
