@@ -116,18 +116,18 @@ class AxelThreadSpawn():
       # self.sendText(message['body']['url'])
       # self.sendText(outpath)
       # self.sendText('BEFORE DBG')
-      dbg=', '.join(['axel', '-o', outpath, '-n4', message['body']['url']])
+      dbg=', '.join(['axel', '-o', outpath, '-n4', '-H', message['body']['cookieHeader'], message['body']['url']])
       self.sendText(dbg)
       # self.sendText('AFTER DBG')
 
       # quotedUrl = pipes.quote(message['body']['url'])
 
-      thread = threading.Thread(target=self.forkAxel, args=(outpath, message['body']['url'], downloadid))
+      thread = threading.Thread(target=self.forkAxel, args=(outpath, message['body']['url'], downloadid, message['body']['cookieHeader']))
       thread.start()
 
     threading.Timer(1, self.processMessages).start()
 
-  def forkAxel(self, outpath, url, downloadid):
+  def forkAxel(self, outpath, url, downloadid, cookieHeader):
     self.send_message('"AXEL FORKED {0} {1}"'.format(outpath, url))
     self.send_message('"THE CWD IS {0}"'.format(os.getcwd()))
     scriptdir = os.path.dirname(abspath(getsourcefile(lambda:0)))
@@ -135,7 +135,7 @@ class AxelThreadSpawn():
     self.send_message('"AXEL SCRIPT LOC {0}"'.format(axel_util))
 
     proc = subprocess.Popen(
-        [axel_util, outpath, url],
+        [axel_util, outpath, url, cookieHeader],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=False

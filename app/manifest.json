@@ -22,6 +22,7 @@
     "persistent": true
   },
   "permissions": [
+    "cookies",
     "nativeMessaging",
     "<all_urls>",
     "webRequest",

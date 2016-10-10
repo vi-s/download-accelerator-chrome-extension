@@ -156,26 +156,45 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 
 chrome.webRequest.onBeforeRequest.addListener(function(details){
   //console.log(JSON.ssringify(details));
+  // keep2share support
   if (details.url.indexOf('keep') > -1 && details.url.indexOf('name=') > -1) {
     let split = details.url.split('name=');
     if (!(split.length > 1)) {
       return {};
     }
-    let fileName = split[1];
+    var fileName = split[1];
+    sendDownloadInitNativeMsg(fileName);
+  } else if (details.url.indexOf('joker') > -1) {
+    let split = details.url.split('/');
+    var fileName = split[split.length - 1]
+
+    chrome.cookies.get({
+      url: 'https://filejoker.net',
+      name: 'joker_cook'
+    }, (cookie) => {
+      let cookieHeaderStr = `Cookie: ${cookie.name}=${cookie.value}`
+      sendDownloadInitNativeMsg(fileName, cookieHeaderStr);
+    });
+
+  } else {
+    return {};
+  }
+
+  function sendDownloadInitNativeMsg(fileName, cookieHeaderStr) {
     let id = uuid();
+   
     let downloadMsg = {
       id: id,
       fileName: fileName,
-      url: details.url
+      url: details.url,
+      cookieHeader: cookieHeaderStr ? cookieHeaderStr : ''
     };
+
     sendNativeMessage(downloadMsg);
     dt.addDownload(id, fileName, details.url);
-
-    console.log('uuid', id);
-    console.log('k2cc file found:', fileName);
+    console.log('Download UUID:', id);
+    console.log('File Found Name:', fileName);
     console.log('@URL:', details.url);
-  } else {
-    return {};
   }
 
   // silently cancel the request
@@ -189,7 +208,8 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
 {
   urls: [
     // '<all_urls>',
-    '*://*.keep2share.cc/*'
+    '*://*.keep2share.cc/*',
+    '*://*.filejoker.net/*'    
   ],
   types: [ 'main_frame' ]
 },

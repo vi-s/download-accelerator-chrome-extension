@@ -1,6 +1,7 @@
 #!/bin/bash
 # $1 = output file path
 # $2 = url
+# $3 = cookieHeader
 mkdir -p "${1%/*}"
 PATH=$PATH:/usr/local/bin:/usr/bin
-axel -o "$1" -n4 $2
+axel -o "$1" -n4 -H "$3" "$2"
