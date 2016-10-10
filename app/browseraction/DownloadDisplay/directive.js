@@ -12,6 +12,11 @@ angular.module('DownloadAccelerator').directive('downloadDisplay', function() {
 	    controller: function($scope) {
 	      $scope.test3 = "HI FROM DIRECTIVE 2222";
 
+				$scope.humanTransferSpeed = (speedK) => {
+					speedK = parseFloat(speedK) * 1000;
+					return $scope.humanFileSize(speedK, true);
+				}
+
 	      $scope.humanFileSize = (bytes, si) => {
 			    var thresh = si ? 1000 : 1024;
 			    if(Math.abs(bytes) < thresh) {
@@ -27,7 +32,7 @@ angular.module('DownloadAccelerator').directive('downloadDisplay', function() {
 			    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
 			    return bytes.toFixed(1)+' '+units[u];
 			  }
-			  
+
 	    }
 	  }
 });

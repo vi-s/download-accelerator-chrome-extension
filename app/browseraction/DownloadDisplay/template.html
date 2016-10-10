@@ -16,7 +16,7 @@
 				ng-bind="humanFileSize(downloadState.trackingInfo.filesize, true)">
 	</span>
 	<span ng-if="downloadState.trackingInfo.transferSpeed">
-		{{downloadState.trackingInfo.transferSpeed}} Kb/s
+		{{humanTransferSpeed(downloadState.trackingInfo.transferSpeed)}}/s
 	</span>
 	<span ng-bind="downloadState.trackingInfo.eta"></span>
 </div>
