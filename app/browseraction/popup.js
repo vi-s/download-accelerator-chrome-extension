@@ -60,6 +60,7 @@ angular.module('DownloadAccelerator').controller('progressController', function(
   // read from local storage on popup init, before any progress msgs from bg page
   $scope.downloadsStateMap = {};
   $scope.downloadStateList = [];
+  $scope.filteredDownloadStates = [];
   $scope.downloadSearchQuery = '';
 
   let dsui = new DownloadsStateUIManager($scope.downloadsStateMap, $scope.downloadStateList);
