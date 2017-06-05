@@ -7,10 +7,7 @@
 <b>Progress:</b>
 
 <!--<uib-progressbar class="progress-striped active" value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0" type="success">{{downloadState.trackingInfo.percent}}%</uib-progressbar>-->
-
-<div class="progress">
-	<div class="determinate" style="width: {{downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0}}%"></div>
-</div>
+<md-progress-linear md-mode="determinate" ng-value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0"></md-progress-linear>
 
 <div>
 <!-- 	<span ng-if="downloadState.trackingInfo.percent">
