@@ -5,24 +5,26 @@
 		</md-card-title-text>
 	</md-card-title>
 
-	<div ng-bind="downloadState.fileInfo.id"></div>
-	<div ng-bind="downloadState.fileInfo.url"></div>
-	<div>{{downloadState.fileInfo.dateTimeAdded | json}}</div>
-	<b>Progress:</b>
+	<md-card-content>
+		<div ng-bind="downloadState.fileInfo.id"></div>
+		<div ng-bind="downloadState.fileInfo.url"></div>
+		<div>{{downloadState.fileInfo.dateTimeAdded | json}}</div>
+		<b>Progress:</b>
 
-	<!--<uib-progressbar class="progress-striped active" value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0" type="success">{{downloadState.trackingInfo.percent}}%</uib-progressbar>-->
-	<md-progress-linear md-mode="determinate" ng-value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0"></md-progress-linear>
+		<md-progress-linear class="progress" md-mode="determinate" ng-value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0"></md-progress-linear>
 
-	<div>
-		<span ng-if="downloadState.trackingInfo.percent">
-			{{downloadState.trackingInfo.percent}}%
-		</span> 
-		<span ng-if="downloadState.trackingInfo.filesize"
-					ng-bind="humanFileSize(downloadState.trackingInfo.filesize, true)">
-		</span>
-		<span ng-if="downloadState.trackingInfo.transferSpeed">
-			{{humanTransferSpeed(downloadState.trackingInfo.transferSpeed)}}/s
-		</span>
-		<span ng-bind="downloadState.trackingInfo.eta"></span>
-	</div>
+		<div>
+			<span ng-if="downloadState.trackingInfo.percent">
+				{{downloadState.trackingInfo.percent}}%
+			</span> 
+			<span ng-if="downloadState.trackingInfo.filesize"
+						ng-bind="humanFileSize(downloadState.trackingInfo.filesize, true)">
+			</span>
+			<span ng-if="downloadState.trackingInfo.transferSpeed">
+				{{humanTransferSpeed(downloadState.trackingInfo.transferSpeed)}}/s
+			</span>
+			<span ng-bind="downloadState.trackingInfo.eta"></span>
+		</div>
+	</md-card-content>
+
 </md-card>
