@@ -155,7 +155,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 chrome.webRequest.onBeforeRequest.addListener(function(details){
-  //console.log(JSON.ssringify(details));
+  //console.log(JSON.stringify(details));
   // keep2share support
   if (details.url.indexOf('keep') > -1 && details.url.indexOf('name=') > -1) {
     let split = details.url.split('name=');
@@ -176,6 +176,15 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
       sendDownloadInitNativeMsg(fileName, cookieHeaderStr);
     });
 
+  } else if (details.url.indexOf('138.68.41.100') > -1) {
+    let split = details.url.split('/');
+    var fileName = split[split.length - 1];
+
+    if (! /.+\.[a-zA-Z]{2,}/.test(fileName)) {
+      return {};
+    }
+
+    sendDownloadInitNativeMsg(fileName);
   } else {
     return {};
   }
@@ -209,7 +218,8 @@ chrome.webRequest.onBeforeRequest.addListener(function(details){
   urls: [
     // '<all_urls>',
     '*://*.keep2share.cc/*',
-    '*://*.filejoker.net/*'
+    '*://*.filejoker.net/*',
+    '*://138.68.41.100/*'
   ],
   types: [ 'main_frame' ]
 },
