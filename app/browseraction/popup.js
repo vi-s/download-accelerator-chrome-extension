@@ -1,5 +1,5 @@
 // Angular Module Setup
-angular.module('DownloadAccelerator', ['ui.bootstrap']);
+angular.module('DownloadAccelerator', ['ngMaterial']);
 
 // Download state reader / receiver. Responsible for initially reading cached download state map
 // from local storage, receiving messages from native app brokered through background page

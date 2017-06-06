@@ -3,28 +3,29 @@
 	<head>
 		<title>Download Accelerator Status</title>
 		<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">		-->
-	  <!--<link rel="stylesheet" type="text/css" href="bootstrap.min.css">-->
-	  <link rel="stylesheet" type="text/css" href="style.css">
-	  <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.4/angular-material.min.css">-->
-	  
+	  <link rel="stylesheet" type="text/css" href="angular-material.min.css">
+	  <link rel="stylesheet" type="text/css" href="style.css">	  
 
 		<script src="angular.min.js"></script>
-		<!--<script src="angular-animate.min.js"></script>
+		<script src="angular-animate.min.js"></script>
 		<script src="angular-aria.min.js"></script>
 		<script src="angular-messages.min.js"></script>
-	  <script src="angular-material.min.js"></script>-->
+	  <script src="angular-material.min.js"></script>
 		<script src="popup.js"></script>
 	  <script src="./DownloadDisplay/directive.js"></script>
-		<!--<script src="ui-bootstrap-tpls-2.1.4.min.js"></script>-->
 	</head>
 
 	<body ng-app="DownloadAccelerator" ng-controller="progressController">
-		<span ng-bind="test"></span>
-    <input type="text" class="form-control" placeholder="Search downloads..." ng-model="downloadSearchQuery" ng-model-options="{debounce: 150}">
+		<!--<span ng-bind="test"></span>-->
+		<md-input-container class="md-block searchInputContainer" flex-gt-sm>
+	    <input type="text" placeholder="Search Downloads..." ng-model="downloadSearchQuery" ng-model-options="{debounce: 300}">
+		</md-input-container>
 
-		<div ng-if="!(filteredDownloadStates && filteredDownloadStates.length)" class="noneFound">No Downloads Found!</div>
-		<div id="downloadState{{$index}}" class="card horizontal downloadState" ng-repeat="state in (filteredDownloadStates = (downloadStateList | orderBy: '-fileInfo.dateTimeAdded.getTime()' | filter:downloadSearchQuery)) track by $index">
-			<download-display class="downloadStateDisplay" download-state="state"></download-display>
+		<div class="downloadsContainer">
+			<div ng-if="!(filteredDownloadStates && filteredDownloadStates.length)" class="noneFound">No Downloads Found!</div>
+			<div id="downloadState{{$index}}" ng-repeat="state in (filteredDownloadStates = (downloadStateList | orderBy: '-fileInfo.dateTimeAdded.getTime()' | filter:downloadSearchQuery)) track by $index">
+				<download-display class="downloadCardContainer" download-state="state"></download-display>
+			</div>
 		</div>
 	</body>
 </html>

@@ -37,4 +37,4 @@ angular.module('DownloadAccelerator').directive('downloadDisplay', function() {
 	  }
 });
 
-console.log('DIRECTIVE LOADED');
+console.log('DownloadDisplay DIRECTIVE LOADED');

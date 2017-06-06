@@ -3,13 +3,20 @@ body {
     min-height: 100px;
 }
 
-.downloadState {
-    word-wrap: break-word;
-    display: inline-block;
-    margin: 10px;
-    padding: 10px;
+.searchInputContainer {
+    margin-bottom: -5px;
 }
 
-.downloadStateDisplay {
+.downloadStateCard {
+    word-wrap: break-word;
+    display: inline-block;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 10px;
     width: 100%;
+}
+
+.downloadsContainer {
+    padding-left: 10px;
+    padding-right: 10px
 }
