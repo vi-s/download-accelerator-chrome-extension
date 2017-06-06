@@ -6,10 +6,13 @@ angular.module('DownloadAccelerator', ['ngMaterial']);
 // DownloadStateWriter class, and updating models used to update the UI.
 class DownloadsStateUIManager {
   constructor(downmap, downlist) {
-    this.downloadsStateMap = downmap;
-    this.downloadStateList = downlist;
+    this.refreshDownloadsFromCache(downmap, downlist);
+  }
 
-    this.populateDownloadStateFromCache();
+  refreshDownloadsFromCache(downmap, downlist) {
+    this.downloadsStateMap = downmap;
+    this.downloadStateList = downlist;   
+    this.populateDownloadStateFromCache(); 
   }
 
   // populate cached download state map and list from localstorage
@@ -24,7 +27,7 @@ class DownloadsStateUIManager {
       if (cachedStateMap.hasOwnProperty(downloadId)) {
         let cachedState = cachedStateMap[downloadId];
         if (cachedState && cachedState.fileInfo && cachedState.fileInfo.dateTimeAdded) {
-          cachedState.fileInfo.dateTimeAdded = new Date(JSON.parse(cachedState.fileInfo.dateTimeAdded));
+          cachedState.fileInfo.dateTimeAdded = new Date(cachedState.fileInfo.dateTimeAdded);
         }
 
         cachedState.fileInfo.arrayIdx = this.downloadStateList.length;
@@ -51,7 +54,6 @@ class DownloadsStateUIManager {
     this.downloadsStateMap[stateMsg.fileInfo.id] = stateMsg;
     cb();
   }
-
 }
 
 // Angular Controller Setup
@@ -64,6 +66,28 @@ angular.module('DownloadAccelerator').controller('progressController', function(
   $scope.downloadSearchQuery = '';
 
   let dsui = new DownloadsStateUIManager($scope.downloadsStateMap, $scope.downloadStateList);
+
+  $scope.removeDownload = (download_id) => {
+		// update cache with download state removal
+	  $scope.downloadsStateMap[download_id] = undefined;  
+    localStorage.setItem('download-accel-ext-download-state-map', 
+      JSON.stringify($scope.downloadsStateMap));
+
+    // refresh popup page's state map and download list to reflect deletion  
+    $scope.refreshDownloadsFromCache();
+
+    // refresh background page's cached state map to reflect deletion
+    chrome.extension.sendMessage({
+      type: 'refreshDownloadsFromCache'
+    });
+  }
+
+  $scope.refreshDownloadsFromCache = () => {
+    $scope.downloadsStateMap = {};
+    $scope.downloadStateList = [];
+
+    dsui.refreshDownloadsFromCache($scope.downloadsStateMap, $scope.downloadStateList);
+  }
 
   chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
     switch(request.type) {

@@ -1,4 +1,8 @@
 <md-card class="downloadStateCard"> 
+	<md-button class="md-icon-button closeButton" ng-click="removeCard($event)" aria-label="remove download">
+		<span id="close">&times;</span>
+	</md-button>
+
 	<md-card-title>
 		<md-card-title-text>
 			<span class="md-display-1" ng-bind="downloadState.fileInfo.fileName"></span>
@@ -26,5 +30,4 @@
 			<span ng-bind="downloadState.trackingInfo.eta"></span>
 		</div>
 	</md-card-content>
-
 </md-card>

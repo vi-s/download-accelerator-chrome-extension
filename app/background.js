@@ -5,11 +5,7 @@ class DownloadStateWriter {
 
   constructor() {
     this.downloadStateMap = {};
-
-    let cachedState = localStorage.getItem('download-accel-ext-download-state-map');
-    if (cachedState) {
-      this.downloadStateMap = JSON.parse(cachedState);
-    }
+    this.refreshDownloadsFromCache();
   }
 
   addDownload(id, fileName, url) {
@@ -24,6 +20,13 @@ class DownloadStateWriter {
     }
 
     this.saveDLState();
+  }
+
+  refreshDownloadsFromCache() {
+    let cachedState = localStorage.getItem('download-accel-ext-download-state-map');
+    if (cachedState) {
+      this.downloadStateMap = JSON.parse(cachedState);
+    }
   }
 
   onDownloadProgMsg(msg) {
@@ -144,6 +147,9 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
         type: 'frombg'
       });
       console.log(request);
+      break;
+    case 'refreshDownloadsFromCache':
+      dt.refreshDownloadsFromCache();
       break;
     // case "color-divs":
     //   colorDivs();
