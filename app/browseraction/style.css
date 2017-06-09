@@ -5,6 +5,14 @@ body {
 
 .searchInputContainer {
     margin-bottom: -5px;
+    padding-right: 1% !important;
+    /*position: relative;*/
+}
+
+.searchIcon {
+    /*position: absolute;*/
+    top: 17.5% !important;
+    left: .5% !important;
 }
 
 .downloadStateCard {
@@ -19,7 +27,8 @@ body {
 
 .downloadsContainer {
     padding-left: 10px;
-    padding-right: 10px
+    padding-right: 10px;
+    position: relative;
 }
 
 .progress {
@@ -38,3 +47,31 @@ body {
 #close {
     outline: none;
 }
+
+.numResults {
+    position: fixed;
+    bottom: 2%;
+    right: 2%;
+}
+
+/* ng-repeat animation */
+
+/*.animate-repeat.ng-move,
+.animate-repeat.ng-enter,
+.animate-repeat.ng-leave {
+  transition:all linear 0.5s;
+}
+
+.animate-repeat.ng-leave.ng-leave-active,
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter {
+  opacity:0;
+  max-height:0;
+}
+
+.animate-repeat.ng-leave,
+.animate-repeat.ng-move.ng-move-active,
+.animate-repeat.ng-enter.ng-enter-active {
+  opacity:1;
+  max-height:30px;
+}*/
