@@ -14,7 +14,7 @@ class DownloadStateWriter {
         id: id,
         fileName: fileName,
         url: url,
-        dateTimeAdded: JSON.stringify(new Date())
+        dateTimeAdded: (new Date()).toISOString()
       },
       trackingInfo: {}
     }
@@ -71,7 +71,7 @@ class DownloadStateWriter {
       let hours = Math.floor(etaSeconds / (60 * 60));
       let nonHrSeconds = etaSeconds - (hours * 60 * 60); // second excluding hours
       let minutes = Math.floor(nonHrSeconds / 60);
-      let seconds = etaSeconds - (hours * 60 * 60) - (minutes * 60);
+      let seconds = Math.floor(etaSeconds - (hours * 60 * 60) - (minutes * 60));
       return `${addZeroToTime(hours)}:${addZeroToTime(minutes)}:${addZeroToTime(seconds)}`;
     }
 

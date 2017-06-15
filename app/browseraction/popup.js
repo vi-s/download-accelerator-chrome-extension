@@ -30,28 +30,25 @@ class DownloadsStateUIManager {
           cachedState.fileInfo.dateTimeAdded = new Date(cachedState.fileInfo.dateTimeAdded);
         }
 
-        cachedState.fileInfo.arrayIdx = this.downloadStateList.length;
-        this.downloadStateList[cachedState.fileInfo.arrayIdx] = cachedState;
         this.downloadsStateMap[cachedState.fileInfo.id] = cachedState;
+        this.downloadStateList.push(cachedState);
       }
     }    
   }
 
   onDownloadStateMsg(stateMsg, cb) {
-    // stringifed timestamp -> date obj
-    if (stateMsg && stateMsg.fileInfo && stateMsg.fileInfo.dateTimeAdded) {
-      stateMsg.fileInfo.dateTimeAdded = new Date(JSON.parse(stateMsg.fileInfo.dateTimeAdded));
-    }
-
+    // download not started, not in local cache
     if (!this.downloadsStateMap[stateMsg.fileInfo.id]) {
-      stateMsg.fileInfo.arrayIdx = this.downloadStateList.length;
-    } else {
-      let oldState = this.downloadsStateMap[stateMsg.fileInfo.id];
-      stateMsg.fileInfo.arrayIdx = oldState.fileInfo.arrayIdx;
+      // stringifed timestamp -> date obj
+      stateMsg.fileInfo.dateTimeAdded = new Date(stateMsg.fileInfo.dateTimeAdded);
+      this.downloadsStateMap[stateMsg.fileInfo.id] = stateMsg;
+      this.downloadStateList.push(stateMsg);
+    } else { // download started, in local cache
+      // if dl info already in local storage, only update tracking info upon state msg
+      // only map update is necessary, it will propogate to list's shared obj
+      this.downloadsStateMap[stateMsg.fileInfo.id].trackingInfo = stateMsg.trackingInfo;
     }
 
-    this.downloadStateList[stateMsg.fileInfo.arrayIdx] = stateMsg;
-    this.downloadsStateMap[stateMsg.fileInfo.id] = stateMsg;
     cb();
   }
 }
