@@ -9,7 +9,7 @@ angular.module('DownloadAccelerator').directive('downloadDisplay', function() {
 	    scope: {
 	    	downloadState: '='
 	    },
-	    controller: function($scope) {
+	    controller: function($scope, moment) {
 	      	$scope.test3 = "HI FROM DIRECTIVE 2222";
 
 			$scope.removeCard = (event) => {
@@ -19,6 +19,10 @@ angular.module('DownloadAccelerator').directive('downloadDisplay', function() {
 				$scope.$parent.removeDownload(fileInfo.id);
 			};
 
+			$scope.getTimeAgo = () => {
+				return moment($scope.downloadState.fileInfo.dateTimeAdded).fromNow();
+			};
+			
 			$scope.humanTransferSpeed = (speedK) => {
 				speedK = parseFloat(speedK) * 1000;
 				return $scope.humanFileSize(speedK, true);

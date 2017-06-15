@@ -2,15 +2,15 @@
 <html>
 	<head>
 		<title>Download Accelerator Status</title>
-		<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">		-->
 	  <link rel="stylesheet" type="text/css" href="angular-material.min.css">
 	  <link rel="stylesheet" type="text/css" href="style.css">	  
 
-		<script src="angular.min.js"></script>
-		<script src="angular-animate.min.js"></script>
-		<script src="angular-aria.min.js"></script>
-		<script src="angular-messages.min.js"></script>
-	  <script src="angular-material.min.js"></script>
+		<script src="scripts/angular.min.js"></script>
+		<script src="scripts/angular-animate.min.js"></script>
+		<script src="scripts/angular-aria.min.js"></script>
+		<script src="scripts/angular-messages.min.js"></script>
+	  <script src="scripts/angular-material.min.js"></script>
+	  <script src="scripts/moment.min.js"></script>
 		<script src="popup.js"></script>
 	  <script src="./DownloadDisplay/directive.js"></script>
 	</head>
@@ -18,13 +18,13 @@
 	<body ng-app="DownloadAccelerator" ng-controller="progressController">
 
 		<md-input-container class="md-block searchInputContainer" flex-gt-sm>
-			<md-icon class="searchIcon" md-svg-icon="ic_search_black_48px.svg" aria-label="search "></md-icon>
+			<md-icon class="searchIcon" md-svg-icon="../ic_search_black_48px.svg" aria-label="search "></md-icon>
 	    <input type="text" class="search" placeholder="Search Downloads..." ng-model="downloadSearchQuery" ng-model-options="{debounce: 300}">
 		</md-input-container>
 
 		<div class="downloadsContainer">
 			<div class="animate-repeat" ng-if="!(filteredDownloadStates && filteredDownloadStates.length)" class="noneFound">No Downloads Found!</div>
-			<div id="downloadState{{$index}}" class="animate-repeat" ng-repeat="state in (filteredDownloadStates = (downloadStateList | orderBy: '-fileInfo.dateTimeAdded.getTime()' | filter:downloadSearchQuery)) track by $index">
+			<div id="downloadState{{$index}}" class="animate-repeat" ng-repeat="state in (filteredDownloadStates = (downloadStateList | orderBy: '-fileInfo.dateTimeAdded.getTime()' | filter:downloadSearchQuery)) track by state.fileInfo.id">
 				<download-display class="downloadCardContainer" download-state="state"></download-display>
 			</div>
 			<div class="numResults">

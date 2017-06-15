@@ -12,7 +12,9 @@
 	<md-card-content>
 		<div ng-bind="downloadState.fileInfo.id"></div>
 		<div ng-bind="downloadState.fileInfo.url"></div>
-		<div>{{downloadState.fileInfo.dateTimeAdded | json}}</div>
+		<div>
+			{{getTimeAgo()}} || {{downloadState.fileInfo.dateTimeAdded.toLocaleString()}}
+		</div>
 		<b>Progress:</b>
 
 		<md-progress-linear class="progress" md-mode="determinate" ng-value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0"></md-progress-linear>
