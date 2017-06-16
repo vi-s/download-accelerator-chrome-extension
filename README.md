@@ -1,4 +1,8 @@
 # download-accelerator-chrome-extension
+
+Notes:
+- To init eslint do this use this: ```node_modules/.bin/eslint --init```
+
 Download files parallely in segments through a chrome extension and a native host application (Mac/Linux)
 
 In order for this extension to work you must first install the native messaging

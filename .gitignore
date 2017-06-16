@@ -1,0 +1,4 @@
+dist
+.DS_Store
+/host/dbgout
+node_modules
