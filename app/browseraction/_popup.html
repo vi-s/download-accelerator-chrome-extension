@@ -2,23 +2,11 @@
 <html>
 	<head>
 		<title>Download Accelerator Status</title>
-	  <link rel="stylesheet" type="text/css" href="angular-material.min.css">
-	  <link rel="stylesheet" type="text/css" href="style.css">	  
-
-		<script src="scripts/angular.min.js"></script>
-		<script src="scripts/angular-animate.min.js"></script>
-		<script src="scripts/angular-aria.min.js"></script>
-		<script src="scripts/angular-messages.min.js"></script>
-	  <script src="scripts/angular-material.min.js"></script>
-	  <script src="scripts/moment.min.js"></script>
-		<script src="popup.js"></script>
-	  <script src="./DownloadDisplay/directive.js"></script>
 	</head>
-
-	<body ng-app="DownloadAccelerator" ng-controller="progressController">
-
+	
+	<body ng-app="DownloadAccelerator" ng-controller="downloadsManagerCtrl">
 		<md-input-container class="md-block searchInputContainer" flex-gt-sm>
-			<md-icon class="searchIcon" md-svg-icon="../ic_search_black_48px.svg" aria-label="search "></md-icon>
+			<md-icon class="searchIcon" md-svg-icon="../assets/ic_search_black_48px.svg" aria-label="search "></md-icon>
 	    <input type="text" class="search" placeholder="Search Downloads..." ng-model="downloadSearchQuery" ng-model-options="{debounce: 300}">
 		</md-input-container>
 

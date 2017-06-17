@@ -1,20 +1,23 @@
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var helpers = require('./webpack.helpers.js');
 
-    // 'polyfills': './src/polyfills.ts',
-
 module.exports = {
+  // Entry files for webpack to bundle into 3 chunk files
   entry: {
-    'app': './app.js',
-    'vendor': './vendor.js'
+    'app': './webpack_entry/app.js',
+    'vendor': './webpack_entry/vendor.js',
+    'polyfills': './webpack_entry/polyfills.js'
   },
 
+  // in import statement, this tells webpack to try matching extensionless files with the below 2
   resolve: {
     extensions: ['.js', '.css']
   },
 
+  // NOT COMMON, must be changed for future projects
   output: {
     path: __dirname + '/dist',
   },
@@ -47,12 +50,13 @@ module.exports = {
   },
 
   plugins: [
+    new ProgressBarPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['app', 'vendor']
+      name: ['app', 'vendor', 'polyfills']
     }),
 
     new HtmlWebpackPlugin({
-      template: 'browseraction/popup.html'
+      template: 'browseraction/_popup.html'
     })
   ]
 };

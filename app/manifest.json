@@ -11,11 +11,11 @@
     }
   },*/
   "icons": {
-    "128": "icon-try.png"
+    "128": "assets/icon-try.png"
   },
   "browser_action": {
       "default_title": "Monitor accelerated downloads.",
-      "default_popup": "browseraction/popup.html"
+      "default_popup": "./dist/index.html"
   },
   "background": {
     "scripts": ["background.js"],
