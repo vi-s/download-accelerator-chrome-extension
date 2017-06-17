@@ -1,3 +1,8 @@
+/**
+ * Webpack config to build extension front-end SPA code, common features, can
+ * be extended to form another config for development in addition to production.
+ */
+
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');

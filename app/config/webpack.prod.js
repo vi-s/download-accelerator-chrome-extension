@@ -1,3 +1,7 @@
+/**
+ * Webpack config to build extension front-end SPA code, specialized for production
+ */
+
 var webpack = require('webpack');
 var webpackMerge = require('webpack-merge');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -27,7 +31,6 @@ let prodConfig = {
       }
     }),
     new CopyWebpackPlugin([
-      // { from: 'background.js' },
       { from: 'manifest.json' }
     ])
   ]
