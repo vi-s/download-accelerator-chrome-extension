@@ -27,7 +27,7 @@ let prodConfig = {
       }
     }),
     new CopyWebpackPlugin([
-      { from: 'background.js' },
+      // { from: 'background.js' },
       { from: 'manifest.json' }
     ])
   ]
