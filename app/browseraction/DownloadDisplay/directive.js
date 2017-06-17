@@ -1,11 +1,12 @@
 import moment from 'moment';
+import template from './template.html';
 // var scripts = document.getElementsByTagName("script")
 // var currentScriptPath = scripts[scripts.length-1].src;
 // currentScriptPath.replace('directive.js', 'template.html')
 
 export default function() {
     return {
-        templateUrl: '/browseraction/DownloadDisplay/template.html',
+        template: template,
         restrict: 'E',
         scope: {
           downloadState: '='

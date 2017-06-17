@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Download accelerator extension for chrome",
   "scripts": {
+    "clean": "rimraf dist",
     "build": "rimraf dist && webpack --config config/webpack.prod.js --bail",
+    "watch": "rimraf dist && webpack --config config/webpack.prod.js --bail --watch",
     "start": "webpack-dev-server --inline --progress --port 8080",
     "lint": "eslint **/*.js"
   },
@@ -14,10 +16,11 @@
     "angular-material": "1.1.4",
     "angular-messages": "1.5.8",
     "core-js": "^2.4.1",
-    "moment": "^2.18.1",
-    "progress-bar-webpack-plugin": "^1.9.3"
+    "moment": "^2.18.1"
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^4.0.1",
+    "progress-bar-webpack-plugin": "^1.9.3",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.0.0",
     "babel-preset-env": "^1.5.2",
