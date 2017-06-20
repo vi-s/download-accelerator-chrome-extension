@@ -45,17 +45,12 @@ module.exports = {
 
   plugins: [
     new ProgressBarPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        'ENV': JSON.stringify('production')
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({ // https://github.com/angular/angular/issues/10618
-      mangle: {
-        keep_fnames: true
-      },
-      sourceMap: true
-    }),
+    // new webpack.optimize.UglifyJsPlugin({ // https://github.com/angular/angular/issues/10618
+    //   mangle: {
+    //     keep_fnames: true
+    //   },
+    //   sourceMap: true
+    // }),
     new webpack.NoEmitOnErrorsPlugin()
   ]
 };
