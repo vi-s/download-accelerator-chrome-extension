@@ -1,0 +1,1 @@
+import '../bg/background.js';

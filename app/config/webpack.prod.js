@@ -10,7 +10,7 @@ var commonConfig = require('./webpack.common.js');
 var helpers = require('./webpack.helpers.js');
 
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
-const UGLIFY = false;
+const UGLIFY = true;
 
 let prodConfig = {
   devtool: 'source-map',

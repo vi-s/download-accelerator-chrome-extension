@@ -11,7 +11,7 @@ module.exports = {
   devtool: 'source-map',
   // Entry files for webpack to bundle into 3 chunk files
   entry: {
-    'background': './webpack_entry/bg/background.js'
+    'background': './webpack_entry/background.js'
   },
 
   // in import statement, this tells webpack to try matching extensionless files with the below 2
@@ -29,11 +29,14 @@ module.exports = {
   module: {
     rules: [
       {
-        // JS LOADER
-        // Reference: https://github.com/babel/babel-loader
-        // Transpile .js files using babel-loader
-        // Compiles ES6 and ES7 into ES5 code
-        test: /background\.js$/,
+        /**
+         * LESSON LEARNED: Don't limit the test param scope to sth like
+         * just /background\.js/ , we want to target *.js files for the 
+         * babel loader... otherwise only background.js gets transpiled,
+         * none of the helper files will, thus we run into UglifyJS which 
+         * doesn't support es6.
+         */
+        test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/
       }
@@ -42,12 +45,17 @@ module.exports = {
 
   plugins: [
     new ProgressBarPlugin(),
-    // new webpack.optimize.UglifyJsPlugin({ // https://github.com/angular/angular/issues/10618
-    //   mangle: {
-    //     keep_fnames: true
-    //   },
-    //   sourceMap: true
-    // }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'ENV': JSON.stringify('production')
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({ // https://github.com/angular/angular/issues/10618
+      mangle: {
+        keep_fnames: true
+      },
+      sourceMap: true
+    }),
     new webpack.NoEmitOnErrorsPlugin()
   ]
 };

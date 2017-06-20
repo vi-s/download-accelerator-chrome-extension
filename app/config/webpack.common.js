@@ -46,6 +46,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
         // use this form with hash for cache busting:
         //         loader: 'file-loader?name=assets/[name].[hash].[ext]'
+        // name param speicfies where to emit files inside dist folder
         loader: 'file-loader?name=assets/[name].[ext]'
       },
       {
