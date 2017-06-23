@@ -11,9 +11,11 @@
 
 	<md-card-content>
 		<div ng-bind="downloadState.fileInfo.id"></div>
-		<div ng-bind="downloadState.fileInfo.url"></div>
 		<div>
-			{{getTimeAgo()}} || {{downloadState.fileInfo.dateTimeAdded.toLocaleString()}}
+			<a href="{{downloadState.fileInfo.url}}" target="_blank">{{downloadState.fileInfo.url}}</a>
+		</div>
+		<div>
+			added {{getTimeAgo()}} || {{downloadState.fileInfo.dateTimeAdded.toLocaleString()}}
 		</div>
 		<b>Progress:</b>
 

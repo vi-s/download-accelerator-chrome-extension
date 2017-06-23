@@ -40,12 +40,13 @@ html, body {
 
 .closeButton {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 5px;
+    right: 0;
 }
 
-#close {
-    outline: none;
+/* Button hover animation */
+button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover {
+  background-color: rgba(158, 158, 158, 0.2);
 }
 
 .numResults {

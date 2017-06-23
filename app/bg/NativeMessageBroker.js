@@ -4,6 +4,7 @@
  * larger download accelerator project.
  */
 import DownloadStateStorageBroker from './DownloadStateStorageBroker';
+import $util from '../util';
 
 export default class NativeMessageBroker {
 
@@ -52,6 +53,8 @@ export default class NativeMessageBroker {
 
     this.sendNativeMessage(downloadMsg);
     this.storageBroker.addDownload(id, fileName, details.url);
+    $util.displaySuccessBadge('added!', 3000);
+
     console.log('Download UUID:', id);
     console.log('File Found Name:', fileName);
     console.log('@URL:', details.url);
