@@ -28,6 +28,7 @@ export default ['$scope', function($scope) {
     $scope.downloadStateList = [];
 
     dsui.refreshDownloadsFromCache($scope.downloadStateMap, $scope.downloadStateList);
+    console.log('test');
   }
 
   chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
