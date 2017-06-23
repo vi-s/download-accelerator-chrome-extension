@@ -7,6 +7,12 @@ export default ['$scope', function($scope) {
   $scope.downloadStateList = [];
   $scope.filteredDownloadStates = [];
   $scope.downloadSearchQuery = '';
+  $scope.showList = false;
+
+  setTimeout(() => {
+    $scope.showList = true;
+    $scope.$apply();
+  }, 50);
 
   let dsui = new DownloadsStateUIManager($scope.downloadStateMap, $scope.downloadStateList);
 

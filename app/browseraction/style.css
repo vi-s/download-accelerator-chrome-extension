@@ -25,12 +25,6 @@ html, body {
     position: relative;
 }
 
-.downloadsContainer {
-    padding-left: 10px;
-    padding-right: 10px;
-    position: relative;
-}
-
 .progress {
     height: 4px;
     border-radius: 2px;
@@ -46,7 +40,7 @@ html, body {
 
 /* Button hover animation */
 button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover {
-  background-color: rgba(158, 158, 158, 0.2);
+    background-color: rgba(158, 158, 158, 0.2);
 }
 
 .numResults {
@@ -55,7 +49,21 @@ button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover 
     right: 2%;
 }
 
-/* ng-repeat animation */
+.downloadsContainer {
+    padding-left: 10px;
+    padding-right: 10px;
+    position: relative;
+    transition:all ease 1s;
+    opacity:1;
+}
+
+.downloadsContainer.ng-hide {
+    opacity:0;
+}
+
+/* ng-repeat animation, ngAnimate + ngRepeat don't work well together unforuntaley
+    animate causes lag in ngRepeat removing items from DOM.
+ */
 
 /*.animate-repeat.ng-move,
 .animate-repeat.ng-enter,
