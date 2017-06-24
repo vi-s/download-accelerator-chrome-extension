@@ -156,6 +156,7 @@ class AxelThreadSpawn():
       out = child.stdout.read(1024)
       uiUpdateMsg = {}
 
+      # child.poll() == None indicates that process hasn't terminated yet
       if out == '' and child.poll() != None:
         self.sendText('***AXEL CHILD PROGRAM TERMINATED')
         programTerminated = True
@@ -175,10 +176,10 @@ class AxelThreadSpawn():
           uiUpdateMsg['filesize'] = fileSizeStr
 
         if percentCompleteG:
-          uiUpdateMsg['percent'] = percentCompleteG.groups()[0]
+          uiUpdateMsg['percent'] = percentCompleteG.groups()[-1]
 
         if transferSpeedG:
-          uiUpdateMsg['transferSpeed'] = transferSpeedG.groups()[0]          
+          uiUpdateMsg['transferSpeed'] = transferSpeedG.groups()[-1]          
 
         uiUpdateMsg['id'] = downloadid
 

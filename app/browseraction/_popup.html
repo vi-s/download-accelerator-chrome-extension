@@ -13,7 +13,7 @@
 		<div class="downloadsContainer" ng-show="showList" infinite-scroll="loadMoreDownloads()" infinite-scroll-distance="1">
 			<div class="animate-repeat" ng-if="!(filteredDownloadStates && filteredDownloadStates.length)" class="noneFound">No Downloads Found!</div>
 			<div id="downloadState{{$index}}" class="animate-repeat" ng-repeat="state in (filteredDownloadStates = (downloadStateList | filter:downloadSearchQuery | limitTo:numToDisplay)) track by state.fileInfo.id">
-				<download-display class="downloadCardContainer" download-state="state"></download-display>
+				<download-display class="downloadCardContainer" download-state="state" remove-fn="removeDownload"></download-display>
 			</div>
 			<div class="numResults">
 				<div ng-if="downloadSearchQuery.length > 1">{{filteredDownloadStates.length}} results found</div>
