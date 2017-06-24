@@ -10,13 +10,14 @@
 	    <input type="text" class="search" placeholder="Search Downloads..." ng-model="downloadSearchQuery" ng-model-options="{debounce: 300}">
 		</md-input-container>
 
-		<div class="downloadsContainer" ng-show="showList">
+		<div class="downloadsContainer" ng-show="showList" infinite-scroll="loadMoreDownloads()" infinite-scroll-distance="1">
 			<div class="animate-repeat" ng-if="!(filteredDownloadStates && filteredDownloadStates.length)" class="noneFound">No Downloads Found!</div>
-			<div id="downloadState{{$index}}" class="animate-repeat" ng-repeat="state in (filteredDownloadStates = (downloadStateList | orderBy: '-fileInfo.dateTimeAdded.getTime()' | filter:downloadSearchQuery)) track by state.fileInfo.id">
+			<div id="downloadState{{$index}}" class="animate-repeat" ng-repeat="state in (filteredDownloadStates = (downloadStateList | filter:downloadSearchQuery | limitTo:numToDisplay)) track by state.fileInfo.id">
 				<download-display class="downloadCardContainer" download-state="state"></download-display>
 			</div>
 			<div class="numResults">
-				{{filteredDownloadStates && filteredDownloadStates.length}} results found
+				<div ng-if="downloadSearchQuery.length > 1">{{filteredDownloadStates.length}} results found</div>
+				<div class="dispNum" >{{filteredDownloadStates.length}}/{{downloadStateList.length}}</div>
 			</div>
 		</div>
 	</body>

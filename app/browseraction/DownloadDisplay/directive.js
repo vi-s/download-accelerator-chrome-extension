@@ -11,16 +11,15 @@ export default function() {
         scope: {
           downloadState: '='
         },
-        controller: ['$scope', 'moment', function($scope, moment) {
+        controller: ['$scope', 'moment', '$timeout', function($scope, moment, $timeout) {
           $scope.test3 = "HI FROM DIRECTIVE 2222";
 
           $scope.removeCard = (event) => {
-              setTimeout(() => {
+              $timeout(() => {
                 let fileInfo = $scope.downloadState.fileInfo;
                 if (!fileInfo) return;
 
                 $scope.$parent.removeDownload(fileInfo.id);
-                $scope.$apply();
               }, 300)
           };
 

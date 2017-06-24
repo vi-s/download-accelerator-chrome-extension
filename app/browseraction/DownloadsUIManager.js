@@ -27,6 +27,11 @@ export default class DownloadsStateUIManager {
       this.downloadStateMap[cachedState.fileInfo.id] = cachedState;
       this.downloadStateList.push(cachedState);
     });
+
+    // sort the download state list by date, inverted order, meaning newest dates before older dates
+    this.downloadStateList.sort(function(a,b){
+      return b.fileInfo.dateTimeAdded - a.fileInfo.dateTimeAdded;
+    });
   }
 
   /**

@@ -49,6 +49,10 @@ button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover 
     right: 2%;
 }
 
+.dispNum {
+    text-align: right;
+}
+
 .downloadsContainer {
     padding-left: 10px;
     padding-right: 10px;
@@ -60,6 +64,7 @@ button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover 
 .downloadsContainer.ng-hide {
     opacity:0;
 }
+
 
 /* ng-repeat animation, ngAnimate + ngRepeat don't work well together unforuntaley
     animate causes lag in ngRepeat removing items from DOM.
