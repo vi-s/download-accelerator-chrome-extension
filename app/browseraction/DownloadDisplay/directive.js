@@ -13,6 +13,8 @@ export default function() {
           removeFn: '='
         },
         controller: ['$scope', 'moment', '$timeout', function($scope, moment, $timeout) {
+          $scope.fileSize = getFileSize();
+          
           $scope.removeCard = (event) => {
               $timeout(() => {
                 let fileInfo = $scope.downloadState.fileInfo;
@@ -23,14 +25,24 @@ export default function() {
 
           $scope.getTimeAgo = () => {
               return moment($scope.downloadState.fileInfo.dateTimeAdded).fromNow();
-          };
-          
+          }; 
+
           $scope.humanTransferSpeed = (speedK) => {
               speedK = parseFloat(speedK) * 1000;
-              return $scope.humanFileSize(speedK, true);
+              return humanFileSize(speedK, true);
           }
 
-          $scope.humanFileSize = (bytes, si) => {
+          function getFileSize() {
+            let bytes = Number($scope.downloadState.fileInfo.fileSize);
+            if (isNaN(bytes)) {
+                console.log('ERROR CALCULATING FILE SIZE OF VAL:' + $scope.downloadState.fileInfo.fileSize);
+                return '?';
+            }
+
+            return humanFileSize(bytes, true);
+          };
+
+          function humanFileSize(bytes, si) {
               var thresh = si ? 1000 : 1024;
               if(Math.abs(bytes) < thresh) {
                   return bytes + ' B';
@@ -44,8 +56,7 @@ export default function() {
                   ++u;
               } while(Math.abs(bytes) >= thresh && u < units.length - 1);
               return bytes.toFixed(1)+' '+units[u];
-          }
-
+          };
       }]
     }
 };

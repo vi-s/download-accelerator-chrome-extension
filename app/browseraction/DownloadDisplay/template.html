@@ -19,15 +19,16 @@
 		</div>
 		<b>Progress:</b>
 
-		<md-progress-linear class="progress" md-mode="determinate" ng-value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0"></md-progress-linear>
+		<md-progress-linear ng-if="fileSize !== '?'" class="progress" md-mode="determinate" ng-value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0"></md-progress-linear>
+		<md-progress-linear ng-if="fileSize === '?'" class="progress" md-mode="indeterminate"></md-progress-linear>
 
 		<div>
 			<span ng-if="downloadState.trackingInfo.percent">
 				{{downloadState.trackingInfo.percent}}%
 			</span> 
-			<span ng-if="downloadState.trackingInfo.filesize"
-						ng-bind="humanFileSize(downloadState.trackingInfo.filesize, true)">
-			</span>
+			<!-- Front-End file size calculation from Content-Length header :: 
+						alternate, back-end file size data stored in downloadState.trackingInfo.filesize (bytes) -->
+			<span ng-bind="getFileSize()"></span>
 			<span ng-if="downloadState.trackingInfo.transferSpeed">
 				{{humanTransferSpeed(downloadState.trackingInfo.transferSpeed)}}/s
 			</span>

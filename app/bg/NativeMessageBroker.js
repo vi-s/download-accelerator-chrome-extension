@@ -41,7 +41,7 @@ export default class NativeMessageBroker {
     console.log("Sent message: <b>" + JSON.stringify(message) + "</b>");
   }
 
-  sendDownloadInitNativeMsg(fileName, details, cookieHeaderStr) {
+  sendDownloadInitNativeMsg(fileName, fileSize, details, cookieHeaderStr) {
     let id = this.uuid();
 
     let downloadMsg = {
@@ -52,7 +52,7 @@ export default class NativeMessageBroker {
     };
 
     this.sendNativeMessage(downloadMsg);
-    this.storageBroker.addDownload(id, fileName, details.url);
+    this.storageBroker.addDownload(id, fileName, fileSize, details.url);
     $util.displaySuccessBadge('added!', 3000);
 
     console.log('Download UUID:', id);

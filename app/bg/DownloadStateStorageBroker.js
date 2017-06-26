@@ -12,11 +12,12 @@ export default class DownloadStateStorageBroker {
     this.refreshDownloadsFromCache();
   }
 
-  addDownload(id, fileName, url) {
+  addDownload(id, fileName, fileSize, url) {
     this.downloadStateMap[id] = {
       fileInfo: {
         id: id,
         fileName: fileName,
+        fileSize: fileSize,
         url: url,
         dateTimeAdded: (new Date()).toISOString()
       },
