@@ -43,7 +43,12 @@ export default class HeaderParser {
       fileName = this.getFileNameFromPath(details.url);
     }
 
-    return this.validateFileName(fileName) ? fileName : this.defaultFileName;
+    return this.validateFileName(fileName) ? fileName : this.getDefaultFileName();
+  }
+
+  getDefaultFileName() {
+    // append default file name with timestamp to avoid name colissions
+    return `${this.defaultFileName}_${(new Date()).toISOString().replace(/:/g,'.')}`;
   }
 
   // downloadable files usually have a file extension at least 2 chars long following a name
