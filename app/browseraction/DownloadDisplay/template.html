@@ -1,4 +1,4 @@
-<md-card class="downloadStateCard fade"> 
+<md-card class="downloadStateCard fade" ng-class="{fadeout: downloadState.trackingInfo.state === 'canceled'}"> 
 	<md-button class="md-icon-button closeButton" ng-click="removeCard($event)" aria-label="remove download">
 		<span class="closeSymbol">&times;</span>
 	</md-button>
@@ -19,15 +19,15 @@
 		</div>
 
 		<div class="stateControlButtons" ng-if="downloadState.trackingInfo.percent != '100' && downloadState.trackingInfo.state !== 'canceled'">
-			<a href="#" class="cancelLink" ng-click="cancelDownload($event)">
-				Cancel
-			</a>
+			<a href="javascript:void(0)" class="cancelLink" ng-click="cancelDownload($event)">Cancel</a>
 
-			<a href="#" class="pauseLink" ng-click="togglePause($event)" ng-if="downloadState.trackingInfo.state === 'paused'">
+			<a href="javascript:void(0)" class="pauseLink" ng-click="togglePause($event)" 
+					ng-if="downloadState.trackingInfo.state !== 'paused'">
 				Pause
 			</a>
 
-			<a href="#" class="unpauseLink" ng-click="togglePause($event)" ng-if="downloadState.trackingInfo.state === 'unpaused'">
+			<a href="javascript:void(0)" class="unpauseLink" ng-click="togglePause($event)" 
+					ng-if="downloadState.trackingInfo.state === 'paused'">
 				Unpause
 			</a>
 		</div>

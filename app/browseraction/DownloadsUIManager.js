@@ -50,6 +50,9 @@ export default class DownloadsStateUIManager {
     } else { // download started, in local cache
       // if dl info already in local storage, only update tracking info upon state msg, not file info
       // only map update is necessary, it will propogate to list's shared obj
+
+      // copy current state to updated tracking info
+      stateMsg.trackingInfo.state = this.downloadStateMap[stateMsg.fileInfo.id].trackingInfo.state;
       this.downloadStateMap[stateMsg.fileInfo.id].trackingInfo = stateMsg.trackingInfo;
     }
 

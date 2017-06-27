@@ -12,15 +12,12 @@ export default ['$scope', '$timeout', function($scope, $timeout) {
 
   // Remove download handler, updates download backing data structures on removal
   $scope.removeDownload = (download_id) => {
-    updateCache(download_id);
-    updateBackingDataStructures();
-  }
-
-  function updateCache(download_id) {
     // update cache with download state removal
-    delete $scope.downloadStateMap[download_id];  
+    delete $scope.downloadStateMap[download_id];
     localStorage.setItem('download-accel-ext-download-state-map', 
       JSON.stringify($scope.downloadStateMap));
+
+    updateBackingDataStructures();
   }
 
   function updateBackingDataStructures(){

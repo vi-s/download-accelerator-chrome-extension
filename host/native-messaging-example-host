@@ -109,9 +109,10 @@ class AxelThreadSpawn():
       # self.send_message('"AFTER FILE"')
 
       if 'op' in message['body'] and message['body']['op'] == 'cancel':
-        toCancelProc = self.downloadProcMap[downloadid]
-        if toCancelProc and toCancelProc.poll() == None:
-          os.killpg(os.getpgid(toCancelProc.pid), signal.SIGTERM)
+        if downloadid in self.downloadProcMap:
+          toCancelProc = self.downloadProcMap[downloadid]
+          if toCancelProc and toCancelProc.poll() == None: # axel_util process still running
+            os.killpg(os.getpgid(toCancelProc.pid), signal.SIGTERM)
         break
 
       outpath = '{0}/{1}'.format('~/Downloads', message['body']['fileName'])

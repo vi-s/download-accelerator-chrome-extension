@@ -77,9 +77,9 @@ button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover 
     opacity: 0.5;
 }
 
-.pauseLink, .unpauseLink, .cancelLink {
+/*.pauseLink, .unpauseLink, .cancelLink {
     margin: 2px;
-}
+}*/
 
 /* ng-repeat animation, ngAnimate + ngRepeat don't work well together unforuntaley
     animate causes lag in ngRepeat removing items from DOM.

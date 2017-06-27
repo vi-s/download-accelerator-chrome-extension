@@ -21,6 +21,15 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
       break;
     case 'cancelDownload':
       nativeMsgBroker.sendCancelMsg(request.downloadid);
+      nativeMsgBroker.storageBroker.updateState(request.downloadid, 'canceled');
+      break;
+    case 'pauseDownload':
+      nativeMsgBroker.sendCancelMsg(request.downloadid);
+      nativeMsgBroker.storageBroker.updateState(request.downloadid, 'paused');
+      break;
+    case 'unpauseDownload':
+      nativeMsgBroker.sendUnpauseMsg(request.downloadid);
+      nativeMsgBroker.storageBroker.updateState(request.downloadid, 'active');
       break;
     // case "color-divs":
     //   colorDivs();

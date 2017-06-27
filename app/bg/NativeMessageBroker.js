@@ -50,6 +50,24 @@ export default class NativeMessageBroker {
     this.sendNativeMessage(cancelMsg);
   }
 
+  sendUnpauseMsg(downloadid, cookieHeaderStr) {
+    let downloadState = this.storageBroker.downloadStateMap[downloadid];
+    if (!downloadState) return;
+
+    let downloadMsg = {
+      id: downloadid,
+      fileName: downloadState.fileInfo.fileName,
+      url: downloadState.fileInfo.url,
+      cookieHeader: cookieHeaderStr ? cookieHeaderStr : ''
+    };    
+    this.sendNativeMessage(downloadMsg);
+
+    // update date added on unpause?
+    // downloadState.fileInfo.dateTimeAdded = (new Date()).toISOString();
+    this.storageBroker.saveDLState();
+    $util.displaySuccessBadge('unpaused!', 3000);
+  }
+
   sendDownloadInitNativeMsg(fileName, fileSize, details, cookieHeaderStr) {
     let id = this.uuid();
 
@@ -74,7 +92,8 @@ export default class NativeMessageBroker {
       return;
     }
 
-    // making these two props optional for now
+    // making these two props optional for now for a progress msg to be valid
+    // there are edge cases where percent is reported, but transferSpeed may not be
     // && message.transferSpeed
     // && message.filesize
     if (message.id && message.percent) {

@@ -44,15 +44,20 @@ export default class DownloadStateStorageBroker {
     dlState.trackingInfo.percent = msg.percent;
     dlState.trackingInfo.transferSpeed = msg.transferSpeed ? msg.transferSpeed : dlState.trackingInfo.transferSpeed;
     dlState.trackingInfo.eta = this.getETA(msg);
-    dlState.trackingInfo.state = 'active';
 
     this.saveDLState();
+    if (msg.percent == '100') this.updateState(msg.id, 'finished');
 
     // send dl state message from native app to popup
     chrome.extension.sendMessage({
       type: 'dlprogmsg',
       state: dlState
     });
+  }
+
+  updateState(downloadid, state) {
+    this.downloadStateMap[downloadid].trackingInfo.state = state;
+    this.saveDLState();
   }
 
   saveDLState() {
