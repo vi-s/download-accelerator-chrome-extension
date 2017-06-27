@@ -106,7 +106,7 @@ class AxelThreadSpawn():
       # self.send_message('"{0}"'.format(message['body']['fileName']));
       # self.send_message('"AFTER FILE"')
 
-      outpath = '{0}/{1}'.format('~/octjdl', message['body']['fileName'])
+      outpath = '{0}/{1}'.format('~/Downloads', message['body']['fileName'])
       outpath = os.path.expanduser(outpath)
 
       # dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -169,17 +169,17 @@ class AxelThreadSpawn():
             self.sendText('AXEL FILE SIZE FOUND: {0}'.format(fileSizeStr))
 
         # capture speed/%complete, ex: "[  0%]  .......... .......... .......... .......... ..........  [  48.0KB/s]"
-        percentCompleteG = re.search(self.percentCompleteRe, out)
-        transferSpeedG = re.search(self.transferSpeedRe, out)
+        percentCompleteG = re.findall(self.percentCompleteRe, out)
+        transferSpeedG = re.findall(self.transferSpeedRe, out)
 
         if fileSizeStr:
           uiUpdateMsg['filesize'] = fileSizeStr
 
-        if percentCompleteG:
-          uiUpdateMsg['percent'] = percentCompleteG.groups()[-1]
+        if percentCompleteG and (len(percentCompleteG) > 0):
+          uiUpdateMsg['percent'] = percentCompleteG[-1]
 
-        if transferSpeedG:
-          uiUpdateMsg['transferSpeed'] = transferSpeedG.groups()[-1]          
+        if transferSpeedG and (len(transferSpeedG) > 0):
+          uiUpdateMsg['transferSpeed'] = transferSpeedG[-1]    
 
         uiUpdateMsg['id'] = downloadid
 
