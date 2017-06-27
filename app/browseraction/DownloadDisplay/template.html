@@ -18,7 +18,7 @@
 			added {{getTimeAgo()}} || {{downloadState.fileInfo.dateTimeAdded.toLocaleString()}}
 		</div>
 
-		<div class="stateControlButtons" ng-if="downloadState.trackingInfo.percent != '100' && downloadState.trackingInfo.state !== 'canceled'">
+		<div class="stateControlButtons" ng-if="downloadState.trackingInfo.state !== 'finished' && downloadState.trackingInfo.state !== 'canceled'">
 			<a href="javascript:void(0)" class="cancelLink" ng-click="cancelDownload($event)">Cancel</a>
 
 			<a href="javascript:void(0)" class="pauseLink" ng-click="togglePause($event)" 

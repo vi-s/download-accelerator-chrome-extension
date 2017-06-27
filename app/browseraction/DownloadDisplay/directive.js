@@ -17,7 +17,8 @@ export default function() {
           
           $scope.togglePause = (event) => {
             let downloadState = $scope.downloadState;
-            if (downloadState.trackingInfo.state === 'canceled') {
+            if (downloadState.trackingInfo.state === 'canceled' ||
+              downloadState.trackingInfo.state === 'finished') {
               return;
             }
 

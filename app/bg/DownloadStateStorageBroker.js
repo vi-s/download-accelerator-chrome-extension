@@ -21,7 +21,9 @@ export default class DownloadStateStorageBroker {
         url: url,
         dateTimeAdded: (new Date()).toISOString()
       },
-      trackingInfo: {}
+      trackingInfo: {
+        state: 'active'
+      }
     }
 
     this.saveDLState();
@@ -45,8 +47,8 @@ export default class DownloadStateStorageBroker {
     dlState.trackingInfo.transferSpeed = msg.transferSpeed ? msg.transferSpeed : dlState.trackingInfo.transferSpeed;
     dlState.trackingInfo.eta = this.getETA(msg);
 
+    if (msg.percent == '100') dlState.trackingInfo.state = 'finished';
     this.saveDLState();
-    if (msg.percent == '100') this.updateState(msg.id, 'finished');
 
     // send dl state message from native app to popup
     chrome.extension.sendMessage({
