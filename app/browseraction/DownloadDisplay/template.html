@@ -1,6 +1,6 @@
-<md-card class="downloadStateCard"> 
+<md-card class="downloadStateCard fade"> 
 	<md-button class="md-icon-button closeButton" ng-click="removeCard($event)" aria-label="remove download">
-		<span id="close">&times;</span>
+		<span class="closeSymbol">&times;</span>
 	</md-button>
 
 	<md-card-title>
@@ -18,9 +18,17 @@
 			added {{getTimeAgo()}} || {{downloadState.fileInfo.dateTimeAdded.toLocaleString()}}
 		</div>
 
-		<div id="cancel" ng-if="downloadState.trackingInfo.percent != '100'">
-			<a href="#" ng-click="cancelDownload($event)">
+		<div class="stateControlButtons" ng-if="downloadState.trackingInfo.percent != '100' && downloadState.trackingInfo.state !== 'canceled'">
+			<a href="#" class="cancelLink" ng-click="cancelDownload($event)">
 				Cancel
+			</a>
+
+			<a href="#" class="pauseLink" ng-click="togglePause($event)" ng-if="downloadState.trackingInfo.state === 'paused'">
+				Pause
+			</a>
+
+			<a href="#" class="unpauseLink" ng-click="togglePause($event)" ng-if="downloadState.trackingInfo.state === 'unpaused'">
+				Unpause
 			</a>
 		</div>
 

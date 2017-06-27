@@ -53,6 +53,7 @@ button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover 
     text-align: right;
 }
 
+/* Initial load animation, fade in effect */
 .downloadsContainer {
     padding-left: 10px;
     padding-right: 10px;
@@ -65,6 +66,20 @@ button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover 
     opacity:0;
 }
 
+.fade {
+    opacity: 1;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+}
+
+.fade.fadeout {
+    opacity: 0.5;
+}
+
+.pauseLink, .unpauseLink, .cancelLink {
+    margin: 2px;
+}
 
 /* ng-repeat animation, ngAnimate + ngRepeat don't work well together unforuntaley
     animate causes lag in ngRepeat removing items from DOM.

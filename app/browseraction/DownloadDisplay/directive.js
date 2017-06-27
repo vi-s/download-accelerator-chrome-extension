@@ -16,6 +16,7 @@ export default function() {
           $scope.fileSize = getFileSize();
           
           $scope.cancelDownload = (event) => {
+            $scope.downloadState.trackingInfo.state = 'canceled';
             chrome.extension.sendMessage({
                 type: 'cancelDownload',
                 downloadid: $scope.downloadState.fileInfo.id
@@ -23,6 +24,7 @@ export default function() {
           };
 
           $scope.removeCard = (event) => {
+              $scope.cancelDownload();
               $timeout(() => {
                 let fileInfo = $scope.downloadState.fileInfo;
                 if (!fileInfo) return;
