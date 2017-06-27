@@ -40,9 +40,9 @@ export default class DownloadStateStorageBroker {
     }
 
     let dlState = this.downloadStateMap[msg.id];
-    dlState.trackingInfo.filesize = msg.filesize;
+    dlState.trackingInfo.filesize = msg.filesize ? msg.filesize : dlState.trackingInfo.filesize;
     dlState.trackingInfo.percent = msg.percent;
-    dlState.trackingInfo.transferSpeed = msg.transferSpeed;
+    dlState.trackingInfo.transferSpeed = msg.transferSpeed ? msg.transferSpeed : dlState.trackingInfo.transferSpeed;
     dlState.trackingInfo.eta = this.getETA(msg);
 
     this.saveDLState();

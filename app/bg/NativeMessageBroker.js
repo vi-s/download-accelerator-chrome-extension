@@ -65,7 +65,10 @@ export default class NativeMessageBroker {
       return;
     }
 
-    if (message.id && message.filesize && message.percent && message.transferSpeed) {
+    // making these two props optional for now
+    // && message.transferSpeed
+    // && message.filesize
+    if (message.id && message.percent) {
       this.storageBroker.onDownloadProgMsg(message);
     }
   }
