@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import struct
+import signal
 import sys
 import threading
 import Queue
@@ -51,6 +52,7 @@ class AxelThreadSpawn():
     self.percentCompleteRe = "\[\s*([0-9]+)%\]"
     self.transferSpeedRe = "\[\s*([0-9]+\.[0-9]+).*\]"
     self.stdoutlock = threading.Lock()
+    self.downloadProcMap = {}
 
     self.send_message('"INSIDE AXEL THREAD SPAWN INIT"')
 
@@ -106,6 +108,12 @@ class AxelThreadSpawn():
       # self.send_message('"{0}"'.format(message['body']['fileName']));
       # self.send_message('"AFTER FILE"')
 
+      if 'op' in message['body'] and message['body']['op'] == 'cancel':
+        toCancelProc = self.downloadProcMap[downloadid]
+        if toCancelProc and toCancelProc.poll() == None:
+          os.killpg(os.getpgid(toCancelProc.pid), signal.SIGTERM)
+        break
+
       outpath = '{0}/{1}'.format('~/Downloads', message['body']['fileName'])
       outpath = os.path.expanduser(outpath)
 
@@ -138,8 +146,10 @@ class AxelThreadSpawn():
         [axel_util, outpath, url, cookieHeader],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        shell=False
+        shell=False,
+        preexec_fn=os.setsid
     )
+    self.downloadProcMap[downloadid] = proc
     self.monitorAxelChild(proc, downloadid)
     # (out, err) = proc.communicate() # Communicate blocks
     # self.sendText('AFTER PROC EXEC')

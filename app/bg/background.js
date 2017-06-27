@@ -19,6 +19,9 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     case 'refreshDownloadsFromCache':
       nativeMsgBroker.storageBroker.refreshDownloadsFromCache();
       break;
+    case 'cancelDownload':
+      nativeMsgBroker.sendCancelMsg(request.downloadid);
+      break;
     // case "color-divs":
     //   colorDivs();
     //    break;

@@ -17,8 +17,14 @@
 		<div>
 			added {{getTimeAgo()}} || {{downloadState.fileInfo.dateTimeAdded.toLocaleString()}}
 		</div>
-		<b>Progress:</b>
 
+		<div id="cancel" ng-if="downloadState.trackingInfo.percent != '100'">
+			<a href="#" ng-click="cancelDownload($event)">
+				Cancel
+			</a>
+		</div>
+
+		<b>Progress:</b>
 		<md-progress-linear ng-if="fileSize !== '?'" class="progress" md-mode="determinate" ng-value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0"></md-progress-linear>
 		<md-progress-linear ng-if="fileSize === '?'" class="progress" md-mode="indeterminate"></md-progress-linear>
 

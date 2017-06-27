@@ -41,6 +41,15 @@ export default class NativeMessageBroker {
     console.log("Sent message: <b>" + JSON.stringify(message) + "</b>");
   }
 
+  sendCancelMsg(downloadid) {
+    let cancelMsg = {
+      id: downloadid,
+      op: 'cancel'
+    };
+
+    this.sendNativeMessage(cancelMsg);
+  }
+
   sendDownloadInitNativeMsg(fileName, fileSize, details, cookieHeaderStr) {
     let id = this.uuid();
 
