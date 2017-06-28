@@ -54,40 +54,42 @@ export default class NativeMessageBroker {
     let downloadState = this.storageBroker.downloadStateMap[downloadid];
     if (!downloadState) return;
 
-    $util.getCookieHeaderStr((cookieHeaderStr) => {
-      let downloadMsg = {
-        id: downloadid,
-        fileName: downloadState.fileInfo.fileName,
-        url: downloadState.fileInfo.url,
-        cookieHeader: (sendCookie && cookieHeaderStr) ? cookieHeaderStr : ''
-      };
+    $util.getCookieHeaderStr($util.extractRootDomain(downloadState.fileInfo.url), 
+      (cookieHeaderStr) => {
+        let downloadMsg = {
+          id: downloadid,
+          fileName: downloadState.fileInfo.fileName,
+          url: downloadState.fileInfo.url,
+          cookieHeader: (sendCookie && cookieHeaderStr) ? cookieHeaderStr : ''
+        };
 
-      this.sendNativeMessage(downloadMsg);
-      // update date added on unpause?
-      // downloadState.fileInfo.dateTimeAdded = (new Date()).toISOString();
-      this.storageBroker.saveDLState();
-      $util.displaySuccessBadge('unpaused!', 3000);
-    });
+        this.sendNativeMessage(downloadMsg);
+        // update date added on unpause?
+        // downloadState.fileInfo.dateTimeAdded = (new Date()).toISOString();
+        this.storageBroker.saveDLState();
+        $util.displaySuccessBadge('unpaused!', 3000);
+      });
   }
 
   sendDownloadInitNativeMsg(fileName, fileSize, details, sendCookie=true) {
     let id = $util.uuid();
-    $util.getCookieHeaderStr((cookieHeaderStr) => {
-      let downloadMsg = {
-        id: id,
-        fileName: fileName,
-        url: details.url,
-        cookieHeader: (sendCookie && cookieHeaderStr) ? cookieHeaderStr : ''
-      };
+    $util.getCookieHeaderStr($util.extractRootDomain(details.url),
+      (cookieHeaderStr) => {
+        let downloadMsg = {
+          id: id,
+          fileName: fileName,
+          url: details.url,
+          cookieHeader: (sendCookie && cookieHeaderStr) ? cookieHeaderStr : ''
+        };
 
-      this.sendNativeMessage(downloadMsg);
-      this.storageBroker.addDownload(id, fileName, fileSize, details.url);
-      $util.displaySuccessBadge('added!', 3000);
+        this.sendNativeMessage(downloadMsg);
+        this.storageBroker.addDownload(id, fileName, fileSize, details.url);
+        $util.displaySuccessBadge('added!', 3000);
 
-      console.log('Download UUID:', id);
-      console.log('File Found Name:', fileName);
-      console.log('@URL:', details.url);
-    });
+        console.log('Download UUID:', id);
+        console.log('File Found Name:', fileName);
+        console.log('@URL:', details.url);
+      });
   }
 
   handleMessageTypeCheck(message) {

@@ -40,17 +40,17 @@
 
 			<md-button class="pauseLink md-small" ng-click="togglePause($event)" 
 					ng-if="downloadState.trackingInfo.state !== 'paused'"
-					ng-disabled="unapuseThrottle">
-				<span ng-if="unapuseThrottle">{{unapuseThrottleTimerVal}}</span>
-				<span ng-if="!unapuseThrottle">Pause</span>
+					ng-disabled="unpauseThrottle">
+				<span ng-if="unpauseThrottle">{{unpauseThrottleTimerVal}}</span>
+				<span ng-if="!unpauseThrottle">Pause</span>
 			</md-button>
 
 			<md-button class="unpauseLink md-small" ng-click="togglePause($event)" 
 					ng-if="downloadState.trackingInfo.state === 'paused'"
-					ng-disabled="unapuseThrottle">
+					ng-disabled="unpauseThrottle">
 
-				<span ng-if="unapuseThrottle">{{unapuseThrottleTimerVal}}</span>
-				<span ng-if="!unapuseThrottle">Unpause</span>
+				<span ng-if="unpauseThrottle">{{unpauseThrottleTimerVal}}</span>
+				<span ng-if="!unpauseThrottle">Unpause</span>
 			</md-button>
 		</div>
 	</md-card-content>

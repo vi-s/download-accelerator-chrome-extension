@@ -13,23 +13,23 @@ export default function() {
           removeFn: '='
         },
         controller: ['$scope', 'moment', '$timeout', function($scope, moment, $timeout) {
-          $scope.unapuseThrottle = false;
-          $scope.unapuseThrottleTimerVal = 0;
+          $scope.unpauseThrottle = false;
+          $scope.unpauseThrottleTimerVal = 0;
           $scope.fileSize = getFileSize();
 
           function activateUnpauseThrottle() {
             let throttleMs = 3000; // must be at least 1000, and a multiple of 1000
-            $scope.unapuseThrottleTimerVal = throttleMs / 1000;
-            $scope.unapuseThrottle = true;
+            $scope.unpauseThrottleTimerVal = throttleMs / 1000;
+            $scope.unpauseThrottle = true;
             updateTimer();
 
             function updateTimer() {
               if (throttleMs <= 0) {
-                $scope.unapuseThrottle = false;
+                $scope.unpauseThrottle = false;
                 return;
               }
               
-              $scope.unapuseThrottleTimerVal = throttleMs / 1000;
+              $scope.unpauseThrottleTimerVal = throttleMs / 1000;
               throttleMs -= 1000;
 
               $timeout(updateTimer, 1000);

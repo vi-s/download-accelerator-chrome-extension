@@ -21,10 +21,15 @@ export default {
     this.displayBadge(text, time);
     this.setBadgeColorRed();
   },
-  getCookieHeaderStr(cb) {
-    return chrome.cookies.getAll({}, (cookies) => {
-      if (cookies.length == 0) return '';
-
+  getCookieHeaderStr(domain, cb) {
+    return chrome.cookies.getAll({
+      domain: domain
+    }, (cookies) => {
+      if (!cookies || cookies.length == 0) {
+        cb('')
+        return;
+      }
+      
       let cookieHeaderStr = `Cookie: `;
       cookies.forEach((cookie) => {
         if (cookie.name && cookie.value) {
@@ -40,5 +45,40 @@ export default {
         var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
         return v.toString(16);
     });
+  },
+  extractBaseURL(url) {
+    var pathArray = url.split( '/' );
+    var protocol = pathArray[0];
+    var host = pathArray[2];
+    return protocol + '//' + host;
+  },
+  extractHostname(url) {
+    var hostname;
+    //find & remove protocol (http, ftp, etc.) and get hostname
+
+    if (url.indexOf("://") > -1) {
+        hostname = url.split('/')[2];
+    }
+    else {
+        hostname = url.split('/')[0];
+    }
+
+    //find & remove port number
+    hostname = hostname.split(':')[0];
+    //find & remove "?"
+    hostname = hostname.split('?')[0];
+
+    return hostname;
+  },
+  extractRootDomain(url) {
+    var domain = this.extractHostname(url),
+        splitArr = domain.split('.'),
+        arrLen = splitArr.length;
+
+    //extracting the root domain here
+    if (arrLen > 2) {
+        domain = splitArr[arrLen - 2] + '.' + splitArr[arrLen - 1];
+    }
+    return domain;
   }
 }
