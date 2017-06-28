@@ -28,7 +28,7 @@
 			</span>
 			<!-- Front-End file size calculation from Content-Length header :: 
 						alternate, back-end file size data stored in downloadState.trackingInfo.filesize (bytes) -->
-			<span ng-bind="getFileSize()"></span>
+			<span ng-bind="fileSize"></span>
 			<span ng-if="downloadState.trackingInfo.transferSpeed">
 				{{humanTransferSpeed(downloadState.trackingInfo.transferSpeed)}}/s
 			</span>

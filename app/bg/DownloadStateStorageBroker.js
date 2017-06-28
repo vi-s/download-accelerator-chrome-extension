@@ -37,22 +37,20 @@ export default class DownloadStateStorageBroker {
   }
 
   onDownloadProgMsg(msg) {
-    if (!(msg && msg.id) || !this.downloadStateMap[msg.id]) {
-      return;
-    }
+    if (!(msg && msg.id) || !this.downloadStateMap[msg.id]) return;
 
     let dlState = this.downloadStateMap[msg.id];
-    dlState.trackingInfo.filesize = msg.filesize ? msg.filesize : dlState.trackingInfo.filesize;
-    dlState.trackingInfo.percent = msg.percent;
+    // this is backend file calculation, don't use it in favor of front-end header calculation fileInfo.fileSize
+    // dlState.trackingInfo.filesize = msg.filesize ? msg.filesize : dlState.trackingInfo.filesize;
     dlState.trackingInfo.transferSpeed = msg.transferSpeed ? msg.transferSpeed : dlState.trackingInfo.transferSpeed;
-    dlState.trackingInfo.eta = this.getETA(msg);
-    if (dlState.trackingInfo.eta.indexOf('NaN') > -1) {
-      dlState.trackingInfo.eta = '?';
-    }
 
+    dlState.trackingInfo.percent = msg.percent;
     if (msg.percent == '100') dlState.trackingInfo.state = 'finished';
-    this.saveDLState();
 
+    dlState.trackingInfo.eta = this.getETA(msg);
+    if (dlState.trackingInfo.eta.indexOf('NaN') > -1) dlState.trackingInfo.eta = '?';
+    
+    this.saveDLState();
     // send dl state message from native app to popup
     chrome.extension.sendMessage({
       type: 'dlprogmsg',
@@ -73,7 +71,7 @@ export default class DownloadStateStorageBroker {
   getETA(msg) {
     let percentDone = parseFloat(msg.percent),
         speedK = parseFloat(msg.transferSpeed), // speed kbps
-        filesize = parseFloat(msg.filesize),
+        filesize = parseFloat(this.downloadStateMap[msg.id].fileInfo.fileSize),
         percentLeft = 100 - percentDone,
         estimatedBytesLeft = (percentLeft / 100.0) * filesize,
         etaSeconds = (estimatedBytesLeft / 1000) * (1 / speedK);

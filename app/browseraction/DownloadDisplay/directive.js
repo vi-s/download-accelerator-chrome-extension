@@ -15,6 +15,7 @@ export default function() {
         controller: ['$scope', 'moment', '$timeout', function($scope, moment, $timeout) {
           $scope.unapuseThrottle = false;
           $scope.unapuseThrottleTimerVal = 0;
+          $scope.fileSize = getFileSize();
 
           function activateUnpauseThrottle() {
             let throttleMs = 3000; // must be at least 1000, and a multiple of 1000
@@ -89,7 +90,7 @@ export default function() {
             return humanFileSize(speedK, true);
           }
 
-          $scope.getFileSize = () => {
+          function getFileSize() {
             let bytes = Number($scope.downloadState.fileInfo.fileSize);
             if (isNaN(bytes)) {
               console.log('ERROR CALCULATING FILE SIZE OF VAL:' + $scope.downloadState.fileInfo.fileSize);

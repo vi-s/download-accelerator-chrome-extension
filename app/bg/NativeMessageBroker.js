@@ -50,43 +50,46 @@ export default class NativeMessageBroker {
     this.sendNativeMessage(cancelMsg);
   }
 
-  sendUnpauseMsg(downloadid, cookieHeaderStr) {
+  sendUnpauseMsg(downloadid, sendCookie=true) {
     let downloadState = this.storageBroker.downloadStateMap[downloadid];
     if (!downloadState) return;
 
-    let downloadMsg = {
-      id: downloadid,
-      fileName: downloadState.fileInfo.fileName,
-      url: downloadState.fileInfo.url,
-      cookieHeader: cookieHeaderStr ? cookieHeaderStr : ''
-    };    
-    this.sendNativeMessage(downloadMsg);
+    $util.getCookieHeaderStr((cookieHeaderStr) => {
+      let downloadMsg = {
+        id: downloadid,
+        fileName: downloadState.fileInfo.fileName,
+        url: downloadState.fileInfo.url,
+        cookieHeader: (sendCookie && cookieHeaderStr) ? cookieHeaderStr : ''
+      };
 
-    // update date added on unpause?
-    // downloadState.fileInfo.dateTimeAdded = (new Date()).toISOString();
-    this.storageBroker.saveDLState();
-    $util.displaySuccessBadge('unpaused!', 3000);
+      this.sendNativeMessage(downloadMsg);
+      // update date added on unpause?
+      // downloadState.fileInfo.dateTimeAdded = (new Date()).toISOString();
+      this.storageBroker.saveDLState();
+      $util.displaySuccessBadge('unpaused!', 3000);
+    });
   }
 
-  sendDownloadInitNativeMsg(fileName, fileSize, details, cookieHeaderStr) {
-    let id = this.uuid();
+  sendDownloadInitNativeMsg(fileName, fileSize, details, sendCookie=true) {
+    let id = $util.uuid();
+    $util.getCookieHeaderStr((cookieHeaderStr) => {
+      let downloadMsg = {
+        id: id,
+        fileName: fileName,
+        url: details.url,
+        cookieHeader: (sendCookie && cookieHeaderStr) ? cookieHeaderStr : ''
+      };
 
-    let downloadMsg = {
-      id: id,
-      fileName: fileName,
-      url: details.url,
-      cookieHeader: cookieHeaderStr ? cookieHeaderStr : ''
-    };
+      this.sendNativeMessage(downloadMsg);
+      this.storageBroker.addDownload(id, fileName, fileSize, details.url);
+      $util.displaySuccessBadge('added!', 3000);
 
-    this.sendNativeMessage(downloadMsg);
-    this.storageBroker.addDownload(id, fileName, fileSize, details.url);
-    $util.displaySuccessBadge('added!', 3000);
-
-    console.log('Download UUID:', id);
-    console.log('File Found Name:', fileName);
-    console.log('@URL:', details.url);
+      console.log('Download UUID:', id);
+      console.log('File Found Name:', fileName);
+      console.log('@URL:', details.url);
+    });
   }
-  
+
   handleMessageTypeCheck(message) {
     if (!message) {
       return;
@@ -99,13 +102,6 @@ export default class NativeMessageBroker {
     if (message.id && message.percent) {
       this.storageBroker.onDownloadProgMsg(message);
     }
-  }
-
-  uuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-        return v.toString(16);
-    });
   }
 
 }
