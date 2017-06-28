@@ -46,6 +46,9 @@ export default class DownloadStateStorageBroker {
     dlState.trackingInfo.percent = msg.percent;
     dlState.trackingInfo.transferSpeed = msg.transferSpeed ? msg.transferSpeed : dlState.trackingInfo.transferSpeed;
     dlState.trackingInfo.eta = this.getETA(msg);
+    if (dlState.trackingInfo.eta.indexOf('NaN') > -1) {
+      dlState.trackingInfo.eta = '?';
+    }
 
     if (msg.percent == '100') dlState.trackingInfo.state = 'finished';
     this.saveDLState();

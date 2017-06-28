@@ -13,8 +13,28 @@ export default function() {
           removeFn: '='
         },
         controller: ['$scope', 'moment', '$timeout', function($scope, moment, $timeout) {
-          $scope.fileSize = getFileSize();
-          
+          $scope.unapuseThrottle = false;
+          $scope.unapuseThrottleTimerVal = 0;
+
+          function activateUnpauseThrottle() {
+            let throttleMs = 3000; // must be at least 1000, and a multiple of 1000
+            $scope.unapuseThrottleTimerVal = throttleMs / 1000;
+            $scope.unapuseThrottle = true;
+            updateTimer();
+
+            function updateTimer() {
+              if (throttleMs <= 0) {
+                $scope.unapuseThrottle = false;
+                return;
+              }
+              
+              $scope.unapuseThrottleTimerVal = throttleMs / 1000;
+              throttleMs -= 1000;
+
+              $timeout(updateTimer, 1000);
+            }
+          }
+
           $scope.togglePause = (event) => {
             let downloadState = $scope.downloadState;
             if (downloadState.trackingInfo.state === 'canceled' ||
@@ -23,13 +43,19 @@ export default function() {
             }
 
             if (downloadState.trackingInfo.state !== 'paused') {
-              downloadState.trackingInfo.state = 'paused';
+              activateUnpauseThrottle();
+              $timeout(() => {
+                downloadState.trackingInfo.state = 'paused';
+              }, 100);
               chrome.extension.sendMessage({
                   type: 'pauseDownload',
                   downloadid: $scope.downloadState.fileInfo.id
               });
             } else {
-              downloadState.trackingInfo.state = 'active';
+              activateUnpauseThrottle();
+              $timeout(() => {
+                downloadState.trackingInfo.state = 'active';
+              }, 100);
               chrome.extension.sendMessage({
                   type: 'unpauseDownload',
                   downloadid: $scope.downloadState.fileInfo.id
@@ -63,7 +89,7 @@ export default function() {
             return humanFileSize(speedK, true);
           }
 
-          function getFileSize() {
+          $scope.getFileSize = () => {
             let bytes = Number($scope.downloadState.fileInfo.fileSize);
             if (isNaN(bytes)) {
               console.log('ERROR CALCULATING FILE SIZE OF VAL:' + $scope.downloadState.fileInfo.fileSize);
