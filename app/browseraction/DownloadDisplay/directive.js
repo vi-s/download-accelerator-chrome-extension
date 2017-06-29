@@ -86,6 +86,7 @@ export default function() {
           }; 
 
           $scope.humanTransferSpeed = (speedK) => {
+            if (!speedK) return '?';
             speedK = parseFloat(speedK) * 1000;
             return humanFileSize(speedK, true);
           }

@@ -21,8 +21,22 @@ html, body {
     margin-left: 0;
     margin-right: 0;
     padding: 10px;
+    padding-bottom: 20px;
     width: 100%;
     position: relative;
+}
+
+svg {
+  fill: currentColor;
+}
+
+.doneIcon { 
+    margin: 0;
+    color: rgb(80, 173, 71);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .progress {
@@ -87,7 +101,7 @@ button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover 
 
 .cancelLink {
     position: absolute;
-    left: -6px;
+    left: -8px;
 }
 
 .pauseLink, .unpauseLink {
@@ -99,12 +113,52 @@ button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover 
   width: 20px;
   height: 20px;
   line-height: 20px;
-  min-width: 55px;
+  min-width: 65px;
   min-height: 1%;
   vertical-align: top;
-  font-size: 10px;
+  font-size: 12px;
   padding: 0 0;
   margin: 0;
+}
+
+.downloadTrackingData {
+    position: relative;
+    height: 20px;
+}
+
+.trackingPercent {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.trackingSize {
+    float: right;
+}
+
+.trackingSpeed {
+    float: left;
+}
+
+ .eta {
+     float: right;
+ }
+
+.downloadAddDetails {
+    margin-bottom: 6px;
+}
+
+.downloadUrl {
+    opacity: .5;
+}
+
+.timeAgo {
+    font-size: .75em;
+    opacity: .9;
+}
+
+.progressHeader {
+    position: relative;
 }
 
 /* ng-repeat animation, ngAnimate + ngRepeat don't work well together unforuntaley

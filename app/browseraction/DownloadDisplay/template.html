@@ -5,49 +5,64 @@
 
 	<md-card-title>
 		<md-card-title-text>
-			<span class="md-display-1" ng-bind="downloadState.fileInfo.fileName"></span>
+			<span class="md-display-1 downloadTitle">
+				{{downloadState.fileInfo.fileName}}
+			</span>
 		</md-card-title-text>
 	</md-card-title>
 
 	<md-card-content>
-		<div ng-bind="downloadState.fileInfo.id"></div>
-		<div>
-			<a href="{{downloadState.fileInfo.url}}" target="_blank">{{downloadState.fileInfo.url}}</a>
-		</div>
-		<div>
-			added {{getTimeAgo()}} || {{downloadState.fileInfo.dateTimeAdded.toLocaleString()}}
+		<!--<div ng-bind="downloadState.fileInfo.id"></div>-->
+
+		<div class="downloadAddDetails">
+			<div class="downloadUrl">
+				<a href="{{downloadState.fileInfo.url}}" target="_blank">{{downloadState.fileInfo.url}}</a>
+			</div>
+			<div>
+				<!--<span class="dateAdded">{{downloadState.fileInfo.dateTimeAdded.toLocaleString()}}</span>-->
+				<span class="timeAgo">added {{getTimeAgo()}}</span>
+			</div>
 		</div>
 
-		<b>Progress:</b>
+		<div class="progressHeader">
+			<b class="progressLabel">Progress:</b>
+			<md-icon class="doneIcon" md-svg-icon="../assets/ic_done_black_48px.svg" 
+								aria-label="done " ng-if="downloadState.trackingInfo.state === 'finished'">
+			</md-icon>
+			<span class="eta" ng-bind="downloadState.trackingInfo.eta"></span>
+		</div>
 		<md-progress-linear ng-if="fileSize !== '?'" class="progress" md-mode="determinate" ng-value="downloadState.trackingInfo.percent ? downloadState.trackingInfo.percent : 0"></md-progress-linear>
 		<md-progress-linear ng-if="fileSize === '?'" class="progress" md-mode="indeterminate"></md-progress-linear>
 
 		<div class="downloadTrackingData">
-			<span ng-if="downloadState.trackingInfo.percent">
-				{{downloadState.trackingInfo.percent}}%
+			<span class="trackingPercent">
+				{{downloadState.trackingInfo.percent || '?'}}%
 			</span>
 			<!-- Front-End file size calculation from Content-Length header :: 
 						alternate, back-end file size data stored in downloadState.trackingInfo.filesize (bytes) -->
-			<span ng-bind="fileSize"></span>
-			<span ng-if="downloadState.trackingInfo.transferSpeed">
+			<span class="trackingSize" ng-bind="fileSize"></span>
+			<span class="trackingSpeed">
 				{{humanTransferSpeed(downloadState.trackingInfo.transferSpeed)}}/s
 			</span>
-			<span ng-bind="downloadState.trackingInfo.eta"></span>
 		</div>
 
 		<div class="stateControlButtons" ng-if="downloadState.trackingInfo.state !== 'finished' && downloadState.trackingInfo.state !== 'canceled'">
-			<md-button class="cancelLink md-small" ng-click="cancelDownload($event)">Cancel</md-button>
+			<md-button class="cancelLink md-small" ng-click="cancelDownload($event)"
+								aria-label="cancel">Cancel
+			</md-button>
 
 			<md-button class="pauseLink md-small" ng-click="togglePause($event)" 
 					ng-if="downloadState.trackingInfo.state !== 'paused'"
-					ng-disabled="unpauseThrottle">
+					ng-disabled="unpauseThrottle"
+					aria-label="pause">
 				<span ng-if="unpauseThrottle">{{unpauseThrottleTimerVal}}</span>
 				<span ng-if="!unpauseThrottle">Pause</span>
 			</md-button>
 
 			<md-button class="unpauseLink md-small" ng-click="togglePause($event)" 
 					ng-if="downloadState.trackingInfo.state === 'paused'"
-					ng-disabled="unpauseThrottle">
+					ng-disabled="unpauseThrottle"
+					aria-label="unpause">
 
 				<span ng-if="unpauseThrottle">{{unpauseThrottleTimerVal}}</span>
 				<span ng-if="!unpauseThrottle">Unpause</span>
