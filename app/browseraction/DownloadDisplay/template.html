@@ -3,26 +3,26 @@
 		<span class="closeSymbol">&times;</span>
 	</md-button>
 
-	<md-card-title>
+	<md-card-title class="cardTitle">
 		<md-card-title-text>
-			<span class="md-display-1 downloadTitle">
+			<div class="md-display-1 downloadTitle">
 				{{downloadState.fileInfo.fileName}}
-			</span>
+			</div>
+			<div class="downloadUrl">
+				<span class="urlBullet">- </span>
+				<a href="{{downloadState.fileInfo.url}}" rel="noopener" target="_blank">{{downloadState.fileInfo.url}}</a>
+			</div>
 		</md-card-title-text>
 	</md-card-title>
+
+	<div class="timeAgo">
+		<!--<span class="dateAdded">{{downloadState.fileInfo.dateTimeAdded.toLocaleString()}}</span>-->
+		<span>added {{getTimeAgo()}}</span>
+	</div>
 
 	<md-card-content>
 		<!--<div ng-bind="downloadState.fileInfo.id"></div>-->
 
-		<div class="downloadAddDetails">
-			<div class="downloadUrl">
-				<a href="{{downloadState.fileInfo.url}}" target="_blank">{{downloadState.fileInfo.url}}</a>
-			</div>
-			<div>
-				<!--<span class="dateAdded">{{downloadState.fileInfo.dateTimeAdded.toLocaleString()}}</span>-->
-				<span class="timeAgo">added {{getTimeAgo()}}</span>
-			</div>
-		</div>
 
 		<div class="progressHeader">
 			<b class="progressLabel">Progress:</b>

@@ -144,21 +144,31 @@ button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover 
      float: right;
  }
 
-.downloadAddDetails {
-    margin-bottom: 6px;
-}
-
 .downloadUrl {
     opacity: .5;
+    font-size: .75em;
+    margin-left: 2%
 }
 
 .timeAgo {
-    font-size: .75em;
     opacity: .9;
+    position: absolute;
+    font-size: .75em;
+    right: 3%;
+    bottom: 5%;
 }
 
 .progressHeader {
     position: relative;
+}
+
+.cardTitle {
+    padding-bottom: 5px;
+}
+
+.urlBullet {
+    font-weight: bold;
+    font-size: 1.25em;
 }
 
 /* ng-repeat animation, ngAnimate + ngRepeat don't work well together unforuntaley
