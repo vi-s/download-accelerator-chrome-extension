@@ -48,9 +48,26 @@ export default {
   },
   extractRootDomain(url) {
     // ?: indicates a non capturing group
-    let matches = url.match(/^(?:ftp|https?)\:\/\/(?:www\.)?([^\/:?#]+)(?:[\/:?#]|$)/i),
-        domain = matches && matches[1]; // domain will be null if no match is found
+    let matches = url.match(/^(?:ftp|https?)\:\/\/(?:www\.)?([^\/:?#]+\.[^\/:?#]+)(?:[\/:?#]|$)/i),
+        domain = matches && matches[1], // domain will be null if no match is found
+        domainArr = domain && domain.split('.'),
+        len = domainArr && domainArr.length;
 
+    // ip address
+    if (/^[0-9\.]+$/g.test(domain)) return domain;
+
+    // xx.xx top level domains like co.uk as opposed to simple.com
+    if (len > 2 && domainArr[len - 1].length == 2 && 
+          domainArr[len - 1].length - domainArr[len - 2].length == 0) {
+      return domainArr.slice(len - 3).join('.');
+    } 
+    
+    // handle majority domains that include subdomains, exclude subdomains i.e. prx-125.k2cc.com
+    if (len > 2){
+      return domainArr.slice(len - 2).join('.');          
+    }
+
+    // handle len == 2 cases, just return the regex match, i.e. download.com
     return domain ? domain : '';
   }
 }
