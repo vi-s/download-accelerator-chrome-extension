@@ -48,6 +48,7 @@ chrome.webRequest.onHeadersReceived.addListener((details) => {
   
   if (headerParser.testContentTypeDownloadable(resHeaderMap['content-type'])) {
     let fileName = headerParser.getFileNameFromHeaders(resHeaderMap, details);
+        fileName = decodeURI(fileName).replace(/\s+/g,'_');
     let fileSize = resHeaderMap['content-length']; // find use for this later
 
     nativeMsgBroker.sendDownloadInitNativeMsg(fileName, fileSize, details);

@@ -144,12 +144,6 @@ button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover 
      float: right;
  }
 
-.downloadUrl {
-    opacity: .5;
-    font-size: .75em;
-    margin-left: 2%
-}
-
 .timeAgo {
     opacity: .9;
     position: absolute;
@@ -166,10 +160,22 @@ button.md-icon-button.closeButton.md-button.md-ink-ripple:not([disabled]):hover 
     padding-bottom: 5px;
 }
 
-.urlBullet {
+.downloadUrl {
+    opacity: .5;
+    font-size: .85em;
+    /*margin-left: 2%*/
+}
+
+.urlLink {
+    background-color: #60f9f9;
+    /*background-color: yellow;*/
+}
+
+/*.urlBullet {
     font-weight: bold;
     font-size: 1.25em;
-}
+}*/
+
 
 /* ng-repeat animation, ngAnimate + ngRepeat don't work well together unforuntaley
     animate causes lag in ngRepeat removing items from DOM.

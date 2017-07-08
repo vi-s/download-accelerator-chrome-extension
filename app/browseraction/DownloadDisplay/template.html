@@ -9,8 +9,8 @@
 				{{downloadState.fileInfo.fileName}}
 			</div>
 			<div class="downloadUrl">
-				<span class="urlBullet">- </span>
-				<a href="{{downloadState.fileInfo.url}}" rel="noopener" target="_blank">{{downloadState.fileInfo.url}}</a>
+				<!--<span class="urlBullet">- </span>-->
+				<a class="urlLink" href="{{downloadState.fileInfo.url}}" rel="noopener" target="_blank">{{downloadState.fileInfo.url}}</a>
 			</div>
 		</md-card-title-text>
 	</md-card-title>
@@ -22,7 +22,6 @@
 
 	<md-card-content>
 		<!--<div ng-bind="downloadState.fileInfo.id"></div>-->
-
 
 		<div class="progressHeader">
 			<b class="progressLabel">Progress:</b>
